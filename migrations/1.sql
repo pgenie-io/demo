@@ -9,17 +9,17 @@ create table "artist" (
   "name" text not null unique
 );
 
-create table "artist_genre" (
-  "artist" int4 not null references "artist",
-  "genre" int4 not null references "genre"
-);
-
 create table "album" (
   "id" int4 not null generated always as identity primary key,
   -- Album name.
   "name" text not null unique,
   -- The date the album was first released.
   "released" date null
+);
+
+create table "album_genre" (
+  "album" int4 not null references "album",
+  "genre" int4 not null references "genre"
 );
 
 create table "album_artist" (
