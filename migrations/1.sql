@@ -19,7 +19,7 @@ create table "album" (
   -- Album name.
   "name" text not null unique,
   -- The date the album was first released.
-  "released" date not null
+  "released" date null
 );
 
 create table "album_artist" (
