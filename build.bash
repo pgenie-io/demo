@@ -2,7 +2,8 @@
 set -eo pipefail
 
 function regenerate {
-  rm -rf output
+  rm -rf output/java-jdbc/src
+  rm -rf output/haskell-hasql/library
   pgenie
 }
 
