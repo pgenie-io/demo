@@ -1,4 +1,5 @@
 select id, genre.name
-from artist_genre
-left join genre on genre.id = artist_genre.genre
-where artist = $artist
+from genre
+left join album_genre on album_genre.genre = genre.id
+left join album_artist on album_artist.album = album_genre.album
+where album_artist.artist = $artist
