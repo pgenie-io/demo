@@ -4,7 +4,7 @@ set -eo pipefail
 function regenerate {
   rm -rf output/java-jdbc/src
   rm -rf output/haskell-hasql/library
-  pgn-dev
+  pgn
 }
 
 function build_haskell_hasql {
