@@ -1,8 +1,12 @@
 # Summary
 
-Project demonstrating the use of Pgenie. It defines a music catalogue database with a bunch of queries against it. Following are instructions on how to run Pgenie on it.
+Demonstration of Pgenie. 
 
-# Structure
+This project defines a music catalogue database using migration files in plain SQL and all the queries that are supposed to be executed by client applications of this database, they are also defined using plain SQL.
+
+Following in this readme are instructions on how to use Pgenie to generate client code for Java and Haskell.
+
+# Project Structure
 
 - `migrations/` - directory of sequential migrations of the database schema
 - `queries/` - directory of queries against the schema that the migrations describe
