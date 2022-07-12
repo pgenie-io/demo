@@ -6,6 +6,7 @@ Project demonstrating the use of Pgenie. It defines a music catalogue database w
 
 - `migrations/` - directory of sequential migrations of the database schema
 - `queries/` - directory of queries against the schema that the migrations describe
+- `.pgn1.yaml` - Pgenie project configuration
 
 # Running
 
