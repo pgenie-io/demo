@@ -6,6 +6,14 @@ space: my-space
 # Name of the project.
 # Affects the namespacing in the generated artifacts.
 name: music-catalogue
+# Source directory of schema migrations.
+# When this setting is missing "migrations" is actually implied,
+# so we're only specifying it for the demonstration purposes here.
+migrations-dir: migrations
+# Source directory of queries.
+# When this setting is missing "queries" is actually implied,
+# so we're only specifying it for the demonstration purposes here.
+queries-dir: queries
 # Directory where the generated artifacts will be put.
 # When this setting is missing "artifacts" is actually implied,
 # so we're only specifying it for the demonstration purposes here.
