@@ -1,3 +1,19 @@
+# Name of your organization.
+# In case of personal projects it's your username.
+# Affects the namespacing in the generated artifacts.
 org: my-user-space
+# Name of the project.
+# Affects the namespacing in the generated artifacts.
 name: music-catalogue
-output-dir: output
+# Directory where the generated artifacts will be put.
+# When this setting is missing "artifacts" is actually implied,
+# so we're only specifying it for the demonstration purposes here.
+artifacts-dir: artifacts
+# Artifacts that we want Pgenie to produce.
+# It is libraries for various platforms.
+# Specifying no artifacts is valid.
+# In such case Pgenie simply validate your schema
+# and queries against it.
+artifacts:
+  - haskell-hasql
+  - java-jdbc
