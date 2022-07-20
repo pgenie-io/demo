@@ -1,7 +1,8 @@
-# Name of your organization.
-# In case of personal projects it's your username.
+# Projects space.
+# In case of personal projects it's your username,
+# in case of organization projects it's the organization.
 # Affects the namespacing in the generated artifacts.
-org: my-user-space
+space: my-space
 # Name of the project.
 # Affects the namespacing in the generated artifacts.
 name: music-catalogue
