@@ -1,6 +1,6 @@
-# Projects space.
+# Projects namespace.
 # In case of personal projects it's your username,
-# in case of organization projects it's the organization.
+# in case of organization projects it's the organization name.
 # Affects the namespacing in the generated artifacts.
 space: my-space
 # Name of the project.
@@ -19,10 +19,9 @@ queries-dir: queries
 # so we're only specifying it for the demonstration purposes here.
 artifacts-dir: artifacts
 # Artifacts that we want Pgenie to produce.
-# It is libraries for various platforms.
-# Specifying no artifacts is valid.
-# In such case Pgenie simply validate your schema
-# and queries against it.
+# I.e., libraries for various platforms.
+# If you don't specify any artifacts Pgenie simply validates your schema
+# and queries.
 artifacts:
   - haskell-hasql
   - java-jdbc
