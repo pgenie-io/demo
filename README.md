@@ -18,4 +18,4 @@ Following in this readme are instructions on how to use Pgenie to generate clien
 - Check out this repo
 - Run `pgn`
 
-This will result in creation of the `output` directory. It will contain the generated client packages for Java and Haskell.
+This will result in creation of the `artifacts` directory. It will contain the generated client packages for Java and Haskell.
