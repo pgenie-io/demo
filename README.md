@@ -10,7 +10,7 @@ Following in this readme are instructions on how to use Pgenie to generate clien
 
 - `migrations/` - directory of sequential migrations of the database schema
 - `queries/` - directory of queries against the schema that the migrations describe
-- `.pgn1.yaml` - Pgenie project configuration
+- `.pgenie1.yaml` - Pgenie project configuration
 
 # Running
 
