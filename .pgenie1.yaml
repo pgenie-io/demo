@@ -8,20 +8,12 @@ space: my-space
 # Affects the namespacing in the generated artifacts.
 name: music-catalogue
 
-# Source directory of schema migrations.
-# When this setting is missing "migrations" is actually implied,
-# so we're only specifying it for the demonstration purposes here.
-migrations-dir: migrations
-
-# Source directory of queries.
-# When this setting is missing "queries" is actually implied,
-# so we're only specifying it for the demonstration purposes here.
-queries-dir: queries
-
-# Directory where the generated artifacts will be put.
-# When this setting is missing "artifacts" is actually implied,
-# so we're only specifying it for the demonstration purposes here.
-artifacts-dir: artifacts
+# Version to be used in the generated artifacts.
+# The convention is [SemVer](https://semver.org/).
+# 
+# In case of Haskell the version will be prepended with "0."
+# to comply to the PVP convention.
+version: 1.0.0
 
 # Artifacts that we want Pgenie to produce.
 # I.e., libraries for various platforms.
