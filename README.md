@@ -14,7 +14,7 @@ Following in this readme are instructions on how to use Pgenie to generate clien
 
 # Running
 
-- Install [the `pgn` CLI app](https://github.com/pgenie-io/app) by following the instructions on its repo
+- Install [the `pgn` CLI app](https://github.com/pgenie-io/cli) by following the instructions on its repo
 - Check out this repo
 - Run `pgn`
 
