@@ -4,14 +4,21 @@ on:
   push:
     branches:
       - master
+      - dev
 
 jobs:
 
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Check out the source code
         uses: actions/checkout@v3.0.2
+
+
+
+
+      - name: Init
+        run: sudo apt-get update && sudo apt-get install -y wget xz-utils
 
       - name: Install pGenie
         run: |
@@ -22,18 +29,32 @@ jobs:
           rm $FILE
           mv pgn /usr/local/bin
 
-      - name: Debug
-        run: ping -c 1 api.pgenie.io
+      # - name: Debug
+      #   run: |
+      #     curl -v --http1.1 -X POST https://api.pgenie.io/v1 || :
+      #     ping -c1 api.pgenie.io || :
 
-      - name: Build
-        run: pgn
+      # - run: sudo ethtool -K eth0 tx off rx off
 
-      - name: Deploy
-        uses: leigholiver/commit-with-deploy-key@v1.0.3
-        with:
-          source: artifacts
-          destination_repo: pgenie-io/demo-artifacts
-          git_username: github-actions
-          git_email: github-actions@pgenie.io
-          deploy_key: ${{ secrets.DEPLOY_KEY }}
-          delete_destination: true
+      # - run: pgn --service-url https://bbakoqousu6g9qnpkhh1.containers.yandexcloud.net/
+      - run: pgn --service-url https://d5dse1mp8tvk14hqu5cl.apigw.yandexcloud.net
+      
+
+
+
+      # - name: Build
+      #   uses: pgenie-io/cli.github-action@master
+
+
+
+
+
+
+      # - name: Deploy
+      #   uses: leigholiver/commit-with-deploy-key@v1.0.3
+      #   with:
+      #     source: artifacts
+      #     destination_repo: pgenie-io/demo-artifacts
+      #     git_username: github-actions
+      #     git_email: github-actions@pgenie.io
+      #     deploy_key: ${{ secrets.DEPLOY_KEY }}
