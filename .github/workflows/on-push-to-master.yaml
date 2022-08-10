@@ -1,0 +1,39 @@
+name: Build and deploy artifacts
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the source code
+        uses: actions/checkout@v3.0.2
+
+      - name: Install pGenie
+        run: |
+          VERSION=1.0.0
+          FILE=pgenie-cli-v$VERSION-linux-x64.tar.xz
+          wget -q https://github.com/pgenie-io/cli/releases/download/v$VERSION/$FILE
+          tar -xf $FILE
+          rm $FILE
+          mv pgn /usr/local/bin
+
+      - name: Debug
+        run: ping -c 1 api.pgenie.io
+
+      - name: Build
+        run: pgn
+
+      - name: Deploy
+        uses: leigholiver/commit-with-deploy-key@v1.0.3
+        with:
+          source: artifacts
+          destination_repo: pgenie-io/demo-artifacts
+          git_username: github-actions
+          git_email: github-actions@pgenie.io
+          deploy_key: ${{ secrets.DEPLOY_KEY }}
+          delete_destination: true
