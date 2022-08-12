@@ -12,7 +12,11 @@ Following in this readme are instructions on how to use pGenie to generate clien
 - `queries/` - directory of queries against the schema that the migrations describe
 - `.pgenie1.yaml` - pGenie project configuration
 
-# Running
+# Results
+
+To inspect the code that pGenie would generate for this project see [the "demo-artifacts" repo](https://github.com/pgenie-io/demo-artifacts).
+
+# Running Yourself
 
 - Install [the `pgn` CLI app](https://github.com/pgenie-io/cli) by following the instructions on its repo
 - Check out this repo
