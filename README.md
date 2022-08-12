@@ -14,7 +14,7 @@ Following in this readme are instructions on how to use pGenie to generate clien
 
 # Results
 
-To inspect the code that pGenie would generate for this project see [the "demo-artifacts" repo](https://github.com/pgenie-io/demo-artifacts).
+To quickly inspect the code that pGenie would generate for this project without installing see [the "demo-artifacts" repo](https://github.com/pgenie-io/demo-artifacts).
 
 # Running Yourself
 
@@ -23,3 +23,5 @@ To inspect the code that pGenie would generate for this project see [the "demo-a
 - Run `pgn`
 
 This will result in creation of the `artifacts` directory. It will contain the generated client packages for Java and Haskell.
+
+Go ahead and play with this project. Try changing the names of columns and their types, introduce some syntactic mistakes and run `pgn` to see the effects.
