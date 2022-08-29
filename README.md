@@ -1,8 +1,10 @@
 # Summary
 
-Demonstration of pGenie. 
+Demonstration of pGenie.
 
 This project defines a music catalogue database using migration files in plain SQL and all the queries that are supposed to be executed by the client applications of this database (they are also defined using plain SQL).
+
+_To see the generated code go to the ["demo-artifacts"](https://github.com/pgenie-io/demo-artifacts) repo._
 
 Following in this readme are instructions on how to use pGenie to generate client code for Java and Haskell.
 
@@ -11,10 +13,6 @@ Following in this readme are instructions on how to use pGenie to generate clien
 - `migrations/` - directory of sequential migrations of the database schema
 - `queries/` - directory of queries against the schema that the migrations describe
 - `.pgenie1.yaml` - pGenie project configuration
-
-# Results
-
-To quickly inspect the code that pGenie would generate for this project without installing see [the "demo-artifacts" repo](https://github.com/pgenie-io/demo-artifacts).
 
 # Running Yourself
 
