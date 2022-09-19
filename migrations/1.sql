@@ -6,13 +6,13 @@ create table "genre" (
 
 create table "artist" (
   "id" int4 not null generated always as identity primary key,
-  "name" text not null unique
+  "name" text not null
 );
 
 create table "album" (
   "id" int4 not null generated always as identity primary key,
   -- Album name.
-  "name" text not null unique,
+  "name" text not null,
   -- The date the album was first released.
   "released" date null
 );
