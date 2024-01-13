@@ -20,5 +20,5 @@ version: 1.0.0
 # If you don't specify any artifacts Pgenie simply validates your schema
 # and queries.
 artifacts:
-  - haskell-hasql
-  - java-jdbc
+  - haskell-hasql-v1
+  - java-jdbc-v1
