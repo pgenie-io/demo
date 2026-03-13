@@ -40,12 +40,17 @@ To see pGenie in action:
    rm freeze1.pgn.yaml
    ```
 
-3. **Run the generator:**
+3. **Delete the signature files:**
+   ```bash
+   rm -rf queries/*.sig1.pgn.yaml
+   ```
+
+4. **Run the generator:**
    ```bash
    pgn generate
    ```
 
-4. **Observe the results:**
+5. **Observe the results:**
    - The `artifacts/hasql/` directory is recreated
    - Haskell SDK is generated from your SQL
 
