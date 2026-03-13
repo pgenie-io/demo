@@ -2,15 +2,15 @@
 # In case of personal projects it's your username,
 # in case of organization projects it's the organization name.
 # Affects the namespacing in the generated artifacts.
-space: my-space
+space: my_space
 
 # Name of the project.
 # Affects the namespacing in the generated artifacts.
-name: music-catalogue
+name: music_catalogue
 
 # Version to be used in the generated artifacts.
 # The convention is [SemVer](https://semver.org/).
-# 
+#
 # In case of Haskell the version will be prepended with "0."
 # to comply to the PVP convention.
 version: 1.0.0
@@ -20,5 +20,4 @@ version: 1.0.0
 # If you don't specify any artifacts Pgenie simply validates your schema
 # and queries.
 artifacts:
-  - haskell-hasql-v1
-  - java-jdbc-v1
+  hasql: https://raw.githubusercontent.com/pgenie-io/haskell-hasql.gen/v0.1.0/gen/Gen.dhall
