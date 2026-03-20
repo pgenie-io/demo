@@ -1,7 +1,7 @@
 parameters:
   format:
     type: album_format
-    not_null: false
+    not_null: true
 result:
   cardinality: many
   columns:

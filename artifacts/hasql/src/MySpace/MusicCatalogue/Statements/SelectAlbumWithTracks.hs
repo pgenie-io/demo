@@ -25,7 +25,7 @@ import qualified MySpace.MusicCatalogue.Types as Types
 --
 newtype SelectAlbumWithTracks = SelectAlbumWithTracks
   { -- | Maps to @id@.
-    id :: Maybe (Int64)
+    id :: Int64
   }
   deriving stock (Eq, Show)
 
@@ -57,7 +57,7 @@ instance IsStatement.IsStatement SelectAlbumWithTracks where
 
       encoder =
         mconcat
-          [ (.id) >$< Encoders.param (Encoders.nullable (IsScalar.encoder))
+          [ (.id) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
           ]
 
       decoder =

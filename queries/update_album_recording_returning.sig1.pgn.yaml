@@ -4,7 +4,7 @@ parameters:
     not_null: false
   id:
     type: int8
-    not_null: false
+    not_null: true
 result:
   cardinality: many
   columns:

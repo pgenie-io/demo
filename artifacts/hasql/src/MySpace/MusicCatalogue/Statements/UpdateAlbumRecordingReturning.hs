@@ -29,7 +29,7 @@ data UpdateAlbumRecordingReturning = UpdateAlbumRecordingReturning
   { -- | Maps to @recording@.
     recording :: Maybe (Types.RecordingInfo),
     -- | Maps to @id@.
-    id :: Maybe (Int64)
+    id :: Int64
   }
   deriving stock (Eq, Show)
 
@@ -70,7 +70,7 @@ instance IsStatement.IsStatement UpdateAlbumRecordingReturning where
       encoder =
         mconcat
           [ (.recording) >$< Encoders.param (Encoders.nullable (IsScalar.encoder)),
-            (.id) >$< Encoders.param (Encoders.nullable (IsScalar.encoder))
+            (.id) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
           ]
 
       decoder =

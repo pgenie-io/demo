@@ -27,7 +27,7 @@ data UpdateAlbumReleased = UpdateAlbumReleased
   { -- | Maps to @released@.
     released :: Maybe (Day),
     -- | Maps to @id@.
-    id :: Maybe (Int64)
+    id :: Int64
   }
   deriving stock (Eq, Show)
 
@@ -46,7 +46,7 @@ instance IsStatement.IsStatement UpdateAlbumReleased where
       encoder =
         mconcat
           [ (.released) >$< Encoders.param (Encoders.nullable (IsScalar.encoder)),
-            (.id) >$< Encoders.param (Encoders.nullable (IsScalar.encoder))
+            (.id) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
           ]
 
       decoder =

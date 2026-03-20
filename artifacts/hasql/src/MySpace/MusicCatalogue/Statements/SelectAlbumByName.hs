@@ -30,7 +30,7 @@ import qualified MySpace.MusicCatalogue.Types as Types
 --
 newtype SelectAlbumByName = SelectAlbumByName
   { -- | Maps to @name@.
-    name :: Maybe (Text)
+    name :: Text
   }
   deriving stock (Eq, Show)
 
@@ -69,7 +69,7 @@ instance IsStatement.IsStatement SelectAlbumByName where
 
       encoder =
         mconcat
-          [ (.name) >$< Encoders.param (Encoders.nullable (IsScalar.encoder))
+          [ (.name) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
           ]
 
       decoder =

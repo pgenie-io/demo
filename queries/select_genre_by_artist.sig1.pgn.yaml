@@ -1,7 +1,7 @@
 parameters:
   artist:
     type: int4
-    not_null: false
+    not_null: true
 result:
   cardinality: many
   columns:

@@ -30,7 +30,7 @@ import qualified MySpace.MusicCatalogue.Types as Types
 --
 newtype SelectAlbumByFormat = SelectAlbumByFormat
   { -- | Maps to @format@.
-    format :: Maybe (Types.AlbumFormat)
+    format :: Types.AlbumFormat
   }
   deriving stock (Eq, Show)
 
@@ -69,7 +69,7 @@ instance IsStatement.IsStatement SelectAlbumByFormat where
 
       encoder =
         mconcat
-          [ (.format) >$< Encoders.param (Encoders.nullable (IsScalar.encoder))
+          [ (.format) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
           ]
 
       decoder =
