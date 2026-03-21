@@ -9,6 +9,7 @@ import qualified Data.Vector as Vector
 import qualified Hasql.Mapping.IsStatement as IsStatement
 import qualified Hasql.Mapping.IsScalar as IsScalar
 import qualified MySpace.MusicCatalogue.Types as Types
+import qualified PostgresqlTypes as Pt
 
 -- |
 -- Parameters for the @insert_album@ query.
@@ -27,7 +28,7 @@ data InsertAlbum = InsertAlbum
   { -- | Maps to @name@.
     name :: Text,
     -- | Maps to @released@.
-    released :: Day,
+    released :: Pt.Date,
     -- | Maps to @format@.
     format :: Types.AlbumFormat,
     -- | Maps to @recording@.

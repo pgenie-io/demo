@@ -13,4 +13,5 @@ import Data.Scientific as Exports (Scientific)
 import Data.ByteString as Exports (ByteString)
 import Data.Time as Exports (Day, DiffTime, TimeOfDay, TimeZone, LocalTime, UTCTime)
 import Data.Vector as Exports (Vector)
+import Hasql.PostgresqlTypes ()
 

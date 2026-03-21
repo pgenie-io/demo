@@ -9,6 +9,7 @@ import qualified Data.Vector as Vector
 import qualified Hasql.Mapping.IsStatement as IsStatement
 import qualified Hasql.Mapping.IsScalar as IsScalar
 import qualified MySpace.MusicCatalogue.Types as Types
+import qualified PostgresqlTypes as Pt
 
 -- |
 -- Parameters for the @update_album_recording_returning@ query.
@@ -43,7 +44,7 @@ data UpdateAlbumRecordingReturningResultRow = UpdateAlbumRecordingReturningResul
     -- | Maps to @name@.
     name :: Text,
     -- | Maps to @released@.
-    released :: Maybe (Day),
+    released :: Maybe (Pt.Date),
     -- | Maps to @format@.
     format :: Maybe (Types.AlbumFormat),
     -- | Maps to @recording@.

@@ -6,6 +6,7 @@ import qualified Data.Vector as Vector
 import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
 import qualified Hasql.Mapping.IsScalar as IsScalar
+import qualified PostgresqlTypes as Pt
 
 
 -- |
@@ -18,7 +19,7 @@ data RecordingInfo = RecordingInfo
     -- | Maps to @country@.
     country :: Maybe (Text),
     -- | Maps to @recorded_date@.
-    recordedDate :: Maybe (Day)
+    recordedDate :: Maybe (Pt.Date)
   }
   deriving stock (Show, Eq, Ord)
 

@@ -6,6 +6,7 @@ import qualified Data.Vector as Vector
 import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
 import qualified Hasql.Mapping.IsScalar as IsScalar
+import qualified PostgresqlTypes as Pt
 import qualified MySpace.MusicCatalogue.Types.RecordingInfo as Types
 
 -- |
