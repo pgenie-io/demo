@@ -11,7 +11,8 @@ demo/
 ├── migrations/            # Database schema migrations
 ├── queries/               # Parameterized SQL queries
 └── artifacts/             # Generated code artifacts
-    └── hasql/             # Haskell hasql client library
+    └── haskell/           # Haskell hasql client library
+    └── rust/              # Rust tokio-postgres client library
 ```
 
 ## The Artifacts Directory
@@ -20,11 +21,11 @@ The `artifacts/` directory contains **generated code** that pGenie produces base
 
 ### What's Inside
 
-- **hasql/** — A complete Haskell library with type-safe query functions
-  - Type-safe functions for each SQL query in `queries/`
-  - Data types corresponding to your database schema
-  - Properly typed parameters and return values
+- **haskell/** — A complete Haskell library with type-safe query functions
   - Ready to use with the [hasql](https://hackage.haskell.org/package/hasql) library
+
+- **rust/** — A complete Rust library with type-safe query functions
+  - Ready to use with the [tokio-postgres](https://crates.io/crates/tokio-postgres) library
 
 ## Try It Yourself
 
@@ -51,7 +52,8 @@ To see pGenie in action:
    ```
 
 5. **Observe the results:**
-   - The `artifacts/hasql/` directory is recreated
+   - The `artifacts/haskell/` directory is recreated
+   - The `artifacts/rust/` directory is recreated
    - Haskell SDK is generated from your SQL
 
 ## Important: First Run Notice
@@ -69,4 +71,4 @@ You may notice pGenie appears to "hang" on the "Starting Container" and "Loading
 
 - Modify a query in `queries/` and run `pgn generate` to see the artifacts update
 - Add a new migration in `migrations/` to evolve your schema
-- Explore the generated code in `artifacts/hasql/src/` to see the type-safe functions
+- Explore the generated code in `artifacts/` to see the type-safe functions
