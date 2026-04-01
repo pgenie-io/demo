@@ -12,6 +12,7 @@ demo/
 ├── queries/               # Parameterized SQL queries
 └── artifacts/             # Generated code artifacts
     └── haskell/           # Haskell hasql client library
+    └── java/              # Java JDBC client library
     └── rust/              # Rust tokio-postgres client library
 ```
 
@@ -23,6 +24,9 @@ The `artifacts/` directory contains **generated code** that pGenie produces base
 
 - **haskell/** — A complete Haskell library with type-safe query functions
   - Ready to use with the [hasql](https://hackage.haskell.org/package/hasql) library
+
+- **java/** — A complete Java library with type-safe query functions
+  - Ready to use with the [JDBC](https://jdbc.postgresql.org/) API
 
 - **rust/** — A complete Rust library with type-safe query functions
   - Ready to use with the [tokio-postgres](https://crates.io/crates/tokio-postgres) library
