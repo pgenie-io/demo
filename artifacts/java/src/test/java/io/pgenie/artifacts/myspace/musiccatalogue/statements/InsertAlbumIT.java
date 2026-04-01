@@ -1,0 +1,20 @@
+package io.pgenie.artifacts.myspace.musiccatalogue.statements;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import io.pgenie.artifacts.myspace.musiccatalogue.AbstractDatabaseIT;
+import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
+import java.sql.SQLException;
+import java.time.*;
+import org.junit.jupiter.api.Test;
+
+class InsertAlbumIT extends AbstractDatabaseIT {
+
+    @Test
+    void executesWithDefaultValues() throws SQLException {
+        var result = execute(new InsertAlbum("", LocalDate.of(2000, 1, 1), null, null));
+        assertNotNull(result);
+
+    }
+}
+
