@@ -1,0 +1,37 @@
+parameters:
+  artist_name:
+    type: text
+    not_null: false
+  genre_name:
+    type: text
+    not_null: false
+  format:
+    type: album_format
+    not_null: false
+  released_after:
+    type: timestamp
+    not_null: false
+  name_like:
+    type: text
+    not_null: false
+  order_by_name:
+    type: bool
+    not_null: true
+  order_by_released:
+    type: bool
+    not_null: true
+result:
+  cardinality: many
+  columns:
+    id:
+      type: int8
+      not_null: true
+    name:
+      type: text
+      not_null: true
+    released:
+      type: date
+      not_null: false
+    format:
+      type: album_format
+      not_null: false
