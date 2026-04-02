@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Date;
 import java.sql.Types;
 import java.time.*;
+import io.codemine.java.postgresql.codecs.Codec;
 
 import java.util.List;
 

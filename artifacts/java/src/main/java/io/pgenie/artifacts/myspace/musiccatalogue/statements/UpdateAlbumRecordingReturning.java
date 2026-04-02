@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
 import java.time.*;
+import io.codemine.java.postgresql.codecs.Codec;
 
 import java.util.ArrayList;
 import java.util.List;

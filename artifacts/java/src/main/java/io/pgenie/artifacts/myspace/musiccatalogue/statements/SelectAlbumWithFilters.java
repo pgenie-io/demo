@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Date;
 import java.sql.Types;
 import java.time.*;
+import io.codemine.java.postgresql.codecs.Codec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,20 +149,37 @@ public record SelectAlbumWithFilters(
         } else {
             ps.setNull(1, Types.VARCHAR);
         }
-        if (this.genreName() != null) {
-            ps.setString(2, this.genreName());
+        if (this.artistName() != null) {
+            ps.setString(2, this.artistName());
         } else {
             ps.setNull(2, Types.VARCHAR);
         }
-        Jdbc.bind(ps, 3, AlbumFormat.CODEC, this.format());
-        Jdbc.bind(ps, 4, Codec.TIMESTAMP, this.releasedAfter());
-        if (this.nameLike() != null) {
-            ps.setString(5, this.nameLike());
+        if (this.genreName() != null) {
+            ps.setString(3, this.genreName());
         } else {
-            ps.setNull(5, Types.VARCHAR);
+            ps.setNull(3, Types.VARCHAR);
         }
-        ps.setBoolean(6, this.orderByName());
-        ps.setBoolean(7, this.orderByReleased());
+        if (this.genreName() != null) {
+            ps.setString(4, this.genreName());
+        } else {
+            ps.setNull(4, Types.VARCHAR);
+        }
+        Jdbc.bind(ps, 5, AlbumFormat.CODEC, this.format());
+        Jdbc.bind(ps, 6, AlbumFormat.CODEC, this.format());
+        Jdbc.bind(ps, 7, Codec.TIMESTAMP, this.releasedAfter());
+        Jdbc.bind(ps, 8, Codec.TIMESTAMP, this.releasedAfter());
+        if (this.nameLike() != null) {
+            ps.setString(9, this.nameLike());
+        } else {
+            ps.setNull(9, Types.VARCHAR);
+        }
+        if (this.nameLike() != null) {
+            ps.setString(10, this.nameLike());
+        } else {
+            ps.setNull(10, Types.VARCHAR);
+        }
+        ps.setBoolean(11, this.orderByName());
+        ps.setBoolean(12, this.orderByReleased());
     }
 
     @Override
