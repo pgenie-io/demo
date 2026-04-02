@@ -62,7 +62,7 @@ public record SelectAlbumWithTracks(
              */
             String name,
             /**
-             * Maps to the {@code tracks} result-set column. Nullable.
+             * Maps to the {@code tracks} result-set column.
              */
             List<TrackInfo> tracks,
             /**
@@ -101,8 +101,7 @@ public record SelectAlbumWithTracks(
             try {
                 long id = rs.getLong(1);
                 String name = rs.getString(2);
-                String tracksStr = rs.getString(3);
-                List<TrackInfo> tracks = tracksStr != null ? TrackInfo.CODEC.inDim().decodeInTextFromString(tracksStr) : null;
+                List<TrackInfo> tracks = TrackInfo.CODEC.inDim().decodeInTextFromString(rs.getString(3));
                 String discStr = rs.getString(4);
                 DiscInfo disc = discStr != null ? DiscInfo.CODEC.decodeInTextFromString(discStr) : null;
                 output.add(new OutputRow(id, name, tracks, disc));

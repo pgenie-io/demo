@@ -30,7 +30,7 @@ pub struct OutputRow {
     /// Maps to the `name` result set column.
     pub name: String,
     /// Maps to the `tracks` result set column.
-    pub tracks: Option<Vec<crate::types::TrackInfo>>,
+    pub tracks: Vec<crate::types::TrackInfo>,
     /// Maps to the `disc` result set column.
     pub disc: Option<crate::types::DiscInfo>,
 }

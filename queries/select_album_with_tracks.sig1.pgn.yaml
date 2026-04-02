@@ -13,7 +13,7 @@ result:
       not_null: true
     tracks:
       type: track_info
-      not_null: false
+      not_null: true
       dims: 1
       element_not_null: true
     disc:
