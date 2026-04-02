@@ -11,8 +11,8 @@ demo/
 ├── migrations/            # Database schema migrations
 ├── queries/               # Parameterized SQL queries
 └── artifacts/             # Generated code artifacts
-    └── haskell/           # Haskell hasql client library
-    └── java/              # Java JDBC client library
+    ├── haskell/           # Haskell hasql client library
+    ├── java/              # Java JDBC client library
     └── rust/              # Rust tokio-postgres client library
 ```
 
@@ -57,6 +57,7 @@ To see pGenie in action:
 
 5. **Observe the results:**
    - The `artifacts/haskell/` directory is recreated
+   - The `artifacts/java/` directory is recreated
    - The `artifacts/rust/` directory is recreated
    - Haskell SDK is generated from your SQL
 
