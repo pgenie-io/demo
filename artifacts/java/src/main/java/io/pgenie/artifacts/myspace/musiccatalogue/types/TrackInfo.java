@@ -2,6 +2,7 @@ package io.pgenie.artifacts.myspace.musiccatalogue.types;
 
 import java.time.*;
 import java.util.List;
+import java.util.Optional;
 
 import io.codemine.java.postgresql.codecs.Codec;
 import io.codemine.java.postgresql.codecs.CompositeCodec;
@@ -21,22 +22,22 @@ public record TrackInfo(
         /**
          * Maps to {@code title}.
          */
-        String title,
+        Optional<String> title,
         /**
          * Maps to {@code duration_seconds}.
          */
-        Integer durationSeconds,
+        Optional<Integer> durationSeconds,
         /**
          * Maps to {@code tags}.
          */
-        List<String> tags) {
+        Optional<List<Optional<String>>> tags) {
 
     public static final CompositeCodec<TrackInfo> CODEC = new CompositeCodec<>(
             "public", "track_info",
             (String title) -> (Integer durationSeconds) -> (List<String> tags) -> new TrackInfo(
-                    title, durationSeconds, tags),
-            new CompositeCodec.Field<>("title", TrackInfo::title, Codec.TEXT),
-            new CompositeCodec.Field<>("duration_seconds", TrackInfo::durationSeconds, Codec.INT4),
-            new CompositeCodec.Field<>("tags", TrackInfo::tags, Codec.TEXT.inDim()));
+                    Optional.ofNullable(title), Optional.ofNullable(durationSeconds), Optional.ofNullable(tags).map(list -> list.stream().map(Optional::ofNullable).toList())),
+            new CompositeCodec.Field<>("title", row -> row.title().orElse(null), Codec.TEXT),
+            new CompositeCodec.Field<>("duration_seconds", row -> row.durationSeconds().orElse(null), Codec.INT4),
+            new CompositeCodec.Field<>("tags", row -> row.tags().map(list -> list.stream().map(o -> o.orElse(null)).toList()).orElse(null), Codec.TEXT.inDim()));
 
 }

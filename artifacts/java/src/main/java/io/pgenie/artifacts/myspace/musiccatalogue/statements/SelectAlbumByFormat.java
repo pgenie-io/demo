@@ -13,6 +13,7 @@ import io.codemine.java.postgresql.codecs.Codec;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Type-safe binding for the {@code select_album_by_format} query.
@@ -70,15 +71,15 @@ public record SelectAlbumByFormat(
             /**
              * Maps to the {@code released} result-set column. Nullable.
              */
-            LocalDate released,
+            Optional<LocalDate> released,
             /**
              * Maps to the {@code format} result-set column. Nullable.
              */
-            AlbumFormat format,
+            Optional<AlbumFormat> format,
             /**
              * Maps to the {@code recording} result-set column. Nullable.
              */
-            RecordingInfo recording) {
+            Optional<RecordingInfo> recording) {
 
     }
 
@@ -117,11 +118,11 @@ public record SelectAlbumByFormat(
                 long id = rs.getLong(1);
                 String name = rs.getString(2);
                 Date releasedSql = rs.getDate(3);
-                LocalDate released = releasedSql != null ? releasedSql.toLocalDate() : null;
+                Optional<LocalDate> released = Optional.ofNullable(releasedSql != null ? releasedSql.toLocalDate() : null);
                 String formatStr = rs.getString(4);
-                AlbumFormat format = formatStr != null ? AlbumFormat.CODEC.decodeInTextFromString(formatStr) : null;
+                Optional<AlbumFormat> format = Optional.ofNullable(formatStr != null ? AlbumFormat.CODEC.decodeInTextFromString(formatStr) : null);
                 String recordingStr = rs.getString(5);
-                RecordingInfo recording = recordingStr != null ? RecordingInfo.CODEC.decodeInTextFromString(recordingStr) : null;
+                Optional<RecordingInfo> recording = Optional.ofNullable(recordingStr != null ? RecordingInfo.CODEC.decodeInTextFromString(recordingStr) : null);
                 output.add(new OutputRow(id, name, released, format, recording));
             } catch (io.codemine.java.postgresql.codecs.Codec.DecodingException e) {
                 throw new IllegalStateException(e);

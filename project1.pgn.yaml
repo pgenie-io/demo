@@ -21,5 +21,8 @@ version: 1.0.0
 # and queries.
 artifacts:
   haskell: https://raw.githubusercontent.com/pgenie-io/haskell.gen/v0.2.1/gen/Gen.dhall
-  java: https://raw.githubusercontent.com/pgenie-io/java.gen/v0.1.1/gen/Gen.dhall
+  java:
+    gen: https://raw.githubusercontent.com/pgenie-io/java.gen/v0.1.2/gen/Gen.dhall
+    config:
+      useOptional: true # Use Optional for nullable fields for clarity.
   rust: https://raw.githubusercontent.com/pgenie-io/rust.gen/v0.1.0/gen/Gen.dhall

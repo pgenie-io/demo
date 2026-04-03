@@ -11,6 +11,8 @@ import java.sql.Date;
 import java.sql.Types;
 import java.time.*;
 
+import java.util.Optional;
+
 /**
  * Type-safe binding for the {@code update_album_released} query.
  *
@@ -32,7 +34,7 @@ public record UpdateAlbumReleased(
         /**
          * Maps to {@code $released} in the template. Nullable.
          */
-        LocalDate released,
+        Optional<LocalDate> released,
         /**
          * Maps to {@code $id} in the template.
          */
@@ -53,8 +55,8 @@ public record UpdateAlbumReleased(
 
     @Override
     public void bindParams(PreparedStatement ps) throws SQLException {
-        if (this.released() != null) {
-            ps.setDate(1, Date.valueOf(this.released()));
+        if (this.released().isPresent()) {
+            ps.setDate(1, Date.valueOf(this.released().get()));
         } else {
             ps.setNull(1, Types.DATE);
         }

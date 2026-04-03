@@ -6,13 +6,14 @@ import io.pgenie.artifacts.myspace.musiccatalogue.AbstractDatabaseIT;
 import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 import java.sql.SQLException;
 import java.time.*;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 class UpdateAlbumRecordingReturningIT extends AbstractDatabaseIT {
 
     @Test
     void executesWithDefaultValues() throws SQLException {
-        var result = execute(new UpdateAlbumRecordingReturning(null, 0L));
+        var result = execute(new UpdateAlbumRecordingReturning(Optional.empty(), 0L));
         assertNotNull(result);
 
     }

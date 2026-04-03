@@ -2,6 +2,7 @@ package io.pgenie.artifacts.myspace.musiccatalogue.types;
 
 import java.time.*;
 import java.util.List;
+import java.util.Optional;
 
 import io.codemine.java.postgresql.codecs.Codec;
 import io.codemine.java.postgresql.codecs.CompositeCodec;
@@ -21,27 +22,27 @@ public record RecordingInfo(
         /**
          * Maps to {@code studio_name}.
          */
-        String studioName,
+        Optional<String> studioName,
         /**
          * Maps to {@code city}.
          */
-        String city,
+        Optional<String> city,
         /**
          * Maps to {@code country}.
          */
-        String country,
+        Optional<String> country,
         /**
          * Maps to {@code recorded_date}.
          */
-        LocalDate recordedDate) {
+        Optional<LocalDate> recordedDate) {
 
     public static final CompositeCodec<RecordingInfo> CODEC = new CompositeCodec<>(
             "public", "recording_info",
             (String studioName) -> (String city) -> (String country) -> (LocalDate recordedDate) -> new RecordingInfo(
-                    studioName, city, country, recordedDate),
-            new CompositeCodec.Field<>("studio_name", RecordingInfo::studioName, Codec.TEXT),
-            new CompositeCodec.Field<>("city", RecordingInfo::city, Codec.TEXT),
-            new CompositeCodec.Field<>("country", RecordingInfo::country, Codec.TEXT),
-            new CompositeCodec.Field<>("recorded_date", RecordingInfo::recordedDate, Codec.DATE));
+                    Optional.ofNullable(studioName), Optional.ofNullable(city), Optional.ofNullable(country), Optional.ofNullable(recordedDate)),
+            new CompositeCodec.Field<>("studio_name", row -> row.studioName().orElse(null), Codec.TEXT),
+            new CompositeCodec.Field<>("city", row -> row.city().orElse(null), Codec.TEXT),
+            new CompositeCodec.Field<>("country", row -> row.country().orElse(null), Codec.TEXT),
+            new CompositeCodec.Field<>("recorded_date", row -> row.recordedDate().orElse(null), Codec.DATE));
 
 }

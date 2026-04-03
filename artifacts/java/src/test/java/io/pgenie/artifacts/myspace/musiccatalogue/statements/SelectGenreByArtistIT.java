@@ -6,6 +6,7 @@ import io.pgenie.artifacts.myspace.musiccatalogue.AbstractDatabaseIT;
 import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 import java.sql.SQLException;
 import java.time.*;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 class SelectGenreByArtistIT extends AbstractDatabaseIT {
