@@ -18,4 +18,3 @@ class SelectAlbumWithFiltersIT extends AbstractDatabaseIT {
 
     }
 }
-

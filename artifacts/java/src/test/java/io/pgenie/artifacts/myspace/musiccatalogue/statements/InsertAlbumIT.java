@@ -18,4 +18,3 @@ class InsertAlbumIT extends AbstractDatabaseIT {
 
     }
 }
-

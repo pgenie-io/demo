@@ -1,19 +1,17 @@
 package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 
-import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
-import io.pgenie.artifacts.myspace.musiccatalogue.codecs.Jdbc;
-import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
 import java.time.*;
-import io.codemine.java.postgresql.codecs.Codec;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import io.codemine.java.postgresql.codecs.Codec;
+import io.pgenie.artifacts.myspace.musiccatalogue.JdbcCodec;
+import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
+import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 
 /**
  * Type-safe binding for the {@code update_album_recording_returning} query.
@@ -52,9 +50,7 @@ public record UpdateAlbumRecordingReturning(
      * Result of the statement parameterised by {@link UpdateAlbumRecordingReturning}.
      */
     public static final class Output extends ArrayList<OutputRow> {
-
-        Output() {
-        }
+        Output() {}
     }
 
     /**
@@ -88,9 +84,7 @@ public record UpdateAlbumRecordingReturning(
             /**
              * Maps to the {@code disc} result-set column. Nullable.
              */
-            Optional<DiscInfo> disc) {
-
-    }
+            Optional<DiscInfo> disc) {}
 
     // -------------------------------------------------------------------------
     // Statement implementation
@@ -100,7 +94,7 @@ public record UpdateAlbumRecordingReturning(
         return """
                -- Update album recording information
                update album
-               set recording = ?::public.recording_info
+               set recording = ?::recording_info
                where id = ?
                returning *
                """;
@@ -108,7 +102,7 @@ public record UpdateAlbumRecordingReturning(
 
     @Override
     public void bindParams(PreparedStatement ps) throws SQLException {
-        Jdbc.bind(ps, 1, RecordingInfo.CODEC, this.recording().orElse(null));
+        new JdbcCodec<>(RecordingInfo.CODEC).bind(ps, 1, this.recording().orElse(null));
         ps.setLong(2, this.id());
     }
 
@@ -120,25 +114,29 @@ public record UpdateAlbumRecordingReturning(
     @Override
     public Output decodeResultSet(ResultSet rs) throws SQLException {
         Output output = new Output();
+        int row = 0;
+        
         while (rs.next()) {
-            try {
-                long id = rs.getLong(1);
-                String name = rs.getString(2);
-                Date releasedSql = rs.getDate(3);
-                Optional<LocalDate> released = Optional.ofNullable(releasedSql != null ? releasedSql.toLocalDate() : null);
-                String formatStr = rs.getString(4);
-                Optional<AlbumFormat> format = Optional.ofNullable(formatStr != null ? AlbumFormat.CODEC.decodeInTextFromString(formatStr) : null);
-                String recordingStr = rs.getString(5);
-                Optional<RecordingInfo> recording = Optional.ofNullable(recordingStr != null ? RecordingInfo.CODEC.decodeInTextFromString(recordingStr) : null);
-                String tracksStr = rs.getString(6);
-                Optional<List<TrackInfo>> tracks = Optional.ofNullable(tracksStr != null ? TrackInfo.CODEC.inDim().decodeInTextFromString(tracksStr) : null);
-                String discStr = rs.getString(7);
-                Optional<DiscInfo> disc = Optional.ofNullable(discStr != null ? DiscInfo.CODEC.decodeInTextFromString(discStr) : null);
-                output.add(new OutputRow(id, name, released, format, recording, tracks, disc));
-            } catch (io.codemine.java.postgresql.codecs.Codec.DecodingException e) {
-                throw new IllegalStateException(e);
+            long idCol = rs.getLong(1);
+            String nameCol = rs.getString(2);
+            Optional<LocalDate> releasedCol;
+            {
+                Date releasedColBase = rs.getDate(3);
+                if (releasedColBase != null) {
+                    releasedCol = Optional.of(releasedColBase.toLocalDate());
+                } else {
+                    releasedCol = Optional.empty();
+                }
             }
+            Optional<AlbumFormat> formatCol = Optional.ofNullable(new JdbcCodec<>(AlbumFormat.CODEC).decodeNullable(rs, row, 4));
+            Optional<RecordingInfo> recordingCol = Optional.ofNullable(new JdbcCodec<>(RecordingInfo.CODEC).decodeNullable(rs, row, 5));
+            Optional<List<TrackInfo>> tracksCol = Optional.ofNullable(new JdbcCodec<>(TrackInfo.CODEC.inDim()).decodeNullable(rs, row, 6));
+            Optional<DiscInfo> discCol = Optional.ofNullable(new JdbcCodec<>(DiscInfo.CODEC).decodeNullable(rs, row, 7));
+
+            output.add(new OutputRow(idCol, nameCol, releasedCol, formatCol, recordingCol, tracksCol, discCol));
+            row++;
         }
+
         return output;
     }
 

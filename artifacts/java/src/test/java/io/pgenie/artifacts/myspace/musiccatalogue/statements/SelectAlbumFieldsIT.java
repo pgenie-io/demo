@@ -18,4 +18,3 @@ class SelectAlbumFieldsIT extends AbstractDatabaseIT {
 
     }
 }
-

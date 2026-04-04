@@ -1,17 +1,15 @@
 package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 
-import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
-import io.pgenie.artifacts.myspace.musiccatalogue.codecs.Jdbc;
-import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
 import java.time.*;
-
 import java.util.ArrayList;
 import java.util.List;
+import io.pgenie.artifacts.myspace.musiccatalogue.JdbcCodec;
+import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
+import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 
 /**
  * Type-safe binding for the {@code select_genre_by_artist} query.
@@ -46,9 +44,7 @@ public record SelectGenreByArtist(
      * Result of the statement parameterised by {@link SelectGenreByArtist}.
      */
     public static final class Output extends ArrayList<OutputRow> {
-
-        Output() {
-        }
+        Output() {}
     }
 
     /**
@@ -62,9 +58,7 @@ public record SelectGenreByArtist(
             /**
              * Maps to the {@code name} result-set column.
              */
-            String name) {
-
-    }
+            String name) {}
 
     // -------------------------------------------------------------------------
     // Statement implementation
@@ -93,11 +87,16 @@ public record SelectGenreByArtist(
     @Override
     public Output decodeResultSet(ResultSet rs) throws SQLException {
         Output output = new Output();
+        int row = 0;
+        
         while (rs.next()) {
-            int id = rs.getInt(1);
-            String name = rs.getString(2);
-            output.add(new OutputRow(id, name));
+            int idCol = rs.getInt(1);
+            String nameCol = rs.getString(2);
+
+            output.add(new OutputRow(idCol, nameCol));
+            row++;
         }
+
         return output;
     }
 

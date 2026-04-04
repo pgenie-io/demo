@@ -18,4 +18,3 @@ class SelectAlbumWithTracksIT extends AbstractDatabaseIT {
 
     }
 }
-

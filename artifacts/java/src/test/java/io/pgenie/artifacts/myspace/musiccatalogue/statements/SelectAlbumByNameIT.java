@@ -18,4 +18,3 @@ class SelectAlbumByNameIT extends AbstractDatabaseIT {
 
     }
 }
-

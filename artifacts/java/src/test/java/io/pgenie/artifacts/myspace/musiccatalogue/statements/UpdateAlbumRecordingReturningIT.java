@@ -18,4 +18,3 @@ class UpdateAlbumRecordingReturningIT extends AbstractDatabaseIT {
 
     }
 }
-

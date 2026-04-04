@@ -1,18 +1,16 @@
 package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 
-import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
-import io.pgenie.artifacts.myspace.musiccatalogue.codecs.Jdbc;
-import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
 import java.time.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import io.pgenie.artifacts.myspace.musiccatalogue.JdbcCodec;
+import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
+import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 
 /**
  * Type-safe binding for the {@code select_album_with_tracks} query.
@@ -45,9 +43,7 @@ public record SelectAlbumWithTracks(
      * Result of the statement parameterised by {@link SelectAlbumWithTracks}.
      */
     public static final class Output extends ArrayList<OutputRow> {
-
-        Output() {
-        }
+        Output() {}
     }
 
     /**
@@ -69,9 +65,7 @@ public record SelectAlbumWithTracks(
             /**
              * Maps to the {@code disc} result-set column. Nullable.
              */
-            Optional<DiscInfo> disc) {
-
-    }
+            Optional<DiscInfo> disc) {}
 
     // -------------------------------------------------------------------------
     // Statement implementation
@@ -98,18 +92,18 @@ public record SelectAlbumWithTracks(
     @Override
     public Output decodeResultSet(ResultSet rs) throws SQLException {
         Output output = new Output();
+        int row = 0;
+        
         while (rs.next()) {
-            try {
-                long id = rs.getLong(1);
-                String name = rs.getString(2);
-                List<TrackInfo> tracks = TrackInfo.CODEC.inDim().decodeInTextFromString(rs.getString(3));
-                String discStr = rs.getString(4);
-                Optional<DiscInfo> disc = Optional.ofNullable(discStr != null ? DiscInfo.CODEC.decodeInTextFromString(discStr) : null);
-                output.add(new OutputRow(id, name, tracks, disc));
-            } catch (io.codemine.java.postgresql.codecs.Codec.DecodingException e) {
-                throw new IllegalStateException(e);
-            }
+            long idCol = rs.getLong(1);
+            String nameCol = rs.getString(2);
+            List<TrackInfo> tracksCol = new JdbcCodec<>(TrackInfo.CODEC.inDim()).decodeNonNullable(rs, row, 3);
+            Optional<DiscInfo> discCol = Optional.ofNullable(new JdbcCodec<>(DiscInfo.CODEC).decodeNullable(rs, row, 4));
+
+            output.add(new OutputRow(idCol, nameCol, tracksCol, discCol));
+            row++;
         }
+
         return output;
     }
 

@@ -1,19 +1,17 @@
 package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 
-import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
-import io.pgenie.artifacts.myspace.musiccatalogue.codecs.Jdbc;
-import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
 import java.time.*;
-import io.codemine.java.postgresql.codecs.Codec;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import io.codemine.java.postgresql.codecs.Codec;
+import io.pgenie.artifacts.myspace.musiccatalogue.JdbcCodec;
+import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
+import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 
 /**
  * Type-safe binding for the {@code select_album_by_format} query.
@@ -51,9 +49,7 @@ public record SelectAlbumByFormat(
      * Result of the statement parameterised by {@link SelectAlbumByFormat}.
      */
     public static final class Output extends ArrayList<OutputRow> {
-
-        Output() {
-        }
+        Output() {}
     }
 
     /**
@@ -79,9 +75,7 @@ public record SelectAlbumByFormat(
             /**
              * Maps to the {@code recording} result-set column. Nullable.
              */
-            Optional<RecordingInfo> recording) {
-
-    }
+            Optional<RecordingInfo> recording) {}
 
     // -------------------------------------------------------------------------
     // Statement implementation
@@ -96,13 +90,13 @@ public record SelectAlbumByFormat(
                  format,
                  recording
                from album
-               where format = ?::public.album_format
+               where format = ?::album_format
                """;
     }
 
     @Override
     public void bindParams(PreparedStatement ps) throws SQLException {
-        Jdbc.bind(ps, 1, AlbumFormat.CODEC, this.format());
+        new JdbcCodec<>(AlbumFormat.CODEC).bind(ps, 1, this.format());
     }
 
     @Override
@@ -113,21 +107,27 @@ public record SelectAlbumByFormat(
     @Override
     public Output decodeResultSet(ResultSet rs) throws SQLException {
         Output output = new Output();
+        int row = 0;
+        
         while (rs.next()) {
-            try {
-                long id = rs.getLong(1);
-                String name = rs.getString(2);
-                Date releasedSql = rs.getDate(3);
-                Optional<LocalDate> released = Optional.ofNullable(releasedSql != null ? releasedSql.toLocalDate() : null);
-                String formatStr = rs.getString(4);
-                Optional<AlbumFormat> format = Optional.ofNullable(formatStr != null ? AlbumFormat.CODEC.decodeInTextFromString(formatStr) : null);
-                String recordingStr = rs.getString(5);
-                Optional<RecordingInfo> recording = Optional.ofNullable(recordingStr != null ? RecordingInfo.CODEC.decodeInTextFromString(recordingStr) : null);
-                output.add(new OutputRow(id, name, released, format, recording));
-            } catch (io.codemine.java.postgresql.codecs.Codec.DecodingException e) {
-                throw new IllegalStateException(e);
+            long idCol = rs.getLong(1);
+            String nameCol = rs.getString(2);
+            Optional<LocalDate> releasedCol;
+            {
+                Date releasedColBase = rs.getDate(3);
+                if (releasedColBase != null) {
+                    releasedCol = Optional.of(releasedColBase.toLocalDate());
+                } else {
+                    releasedCol = Optional.empty();
+                }
             }
+            Optional<AlbumFormat> formatCol = Optional.ofNullable(new JdbcCodec<>(AlbumFormat.CODEC).decodeNullable(rs, row, 4));
+            Optional<RecordingInfo> recordingCol = Optional.ofNullable(new JdbcCodec<>(RecordingInfo.CODEC).decodeNullable(rs, row, 5));
+
+            output.add(new OutputRow(idCol, nameCol, releasedCol, formatCol, recordingCol));
+            row++;
         }
+
         return output;
     }
 
