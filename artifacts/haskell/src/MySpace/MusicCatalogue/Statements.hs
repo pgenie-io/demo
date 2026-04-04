@@ -7,6 +7,8 @@ module MySpace.MusicCatalogue.Statements
     module MySpace.MusicCatalogue.Statements.InsertAlbum,
     -- ** SelectAlbumByFormat
     module MySpace.MusicCatalogue.Statements.SelectAlbumByFormat,
+    -- ** SelectAlbumById
+    module MySpace.MusicCatalogue.Statements.SelectAlbumById,
     -- ** SelectAlbumByName
     module MySpace.MusicCatalogue.Statements.SelectAlbumByName,
     -- ** SelectAlbumFields
@@ -26,6 +28,7 @@ where
 
 import MySpace.MusicCatalogue.Statements.InsertAlbum
 import MySpace.MusicCatalogue.Statements.SelectAlbumByFormat
+import MySpace.MusicCatalogue.Statements.SelectAlbumById
 import MySpace.MusicCatalogue.Statements.SelectAlbumByName
 import MySpace.MusicCatalogue.Statements.SelectAlbumFields
 import MySpace.MusicCatalogue.Statements.SelectAlbumWithFilters
