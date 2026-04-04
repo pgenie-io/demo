@@ -122,6 +122,7 @@ async fn all_declared_statements_execute_with_default_values() {
     assert_statement_executes::<statements::insert_album::Input>(&pool, "insert_album").await;
     assert_statement_executes::<statements::select_album_by_format::Input>(&pool, "select_album_by_format").await;
     assert_statement_executes::<statements::select_album_by_name::Input>(&pool, "select_album_by_name").await;
+    assert_statement_executes::<statements::select_album_fields::Input>(&pool, "select_album_fields").await;
     assert_statement_executes::<statements::select_album_with_filters::Input>(&pool, "select_album_with_filters").await;
     assert_statement_executes::<statements::select_album_with_tracks::Input>(&pool, "select_album_with_tracks").await;
     assert_statement_executes::<statements::select_genre_by_artist::Input>(&pool, "select_genre_by_artist").await;
