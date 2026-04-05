@@ -36,7 +36,7 @@ public record SelectAlbumById(
          * Maps to {@code $id} in the template. Nullable.
          */
         Optional<Long> id)
-        implements Statement<SelectAlbumById.Output> {
+        implements Statement<Optional<SelectAlbumById.OutputRow>> {
 
     // -------------------------------------------------------------------------
     // Result type
@@ -44,7 +44,7 @@ public record SelectAlbumById(
     /**
      * Result of the statement parameterised by {@link SelectAlbumById}.
      */
-    public record Output(
+    public record OutputRow(
             /**
              * Maps to the {@code id} result-set column.
              */
@@ -103,9 +103,9 @@ public record SelectAlbumById(
     }
 
     @Override
-    public Output decodeResultSet(ResultSet rs) throws SQLException {
+    public Optional<OutputRow> decodeResultSet(ResultSet rs) throws SQLException {
         if (!rs.next()) {
-            return null;
+            return Optional.empty();
         }
         long idCol = rs.getLong(1);
         String nameCol = rs.getString(2);
@@ -123,11 +123,11 @@ public record SelectAlbumById(
         Optional<List<Optional<TrackInfo>>> tracksCol = Optional.ofNullable(new JdbcCodec<>(TrackInfo.CODEC.inDim()).decodeNullable(rs, 0, 6).stream().map(Optional::ofNullable).toList());
         Optional<DiscInfo> discCol = Optional.ofNullable(new JdbcCodec<>(DiscInfo.CODEC).decodeNullable(rs, 0, 7));
 
-        return new Output(idCol, nameCol, releasedCol, formatCol, recordingCol, tracksCol, discCol);
+        return Optional.of(new OutputRow(idCol, nameCol, releasedCol, formatCol, recordingCol, tracksCol, discCol));
     }
 
     @Override
-    public SelectAlbumById.Output decodeAffectedRows(long affectedRows) {
+    public Optional<SelectAlbumById.OutputRow> decodeAffectedRows(long affectedRows) {
         throw new UnsupportedOperationException();
     }
 }
