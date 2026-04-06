@@ -56,10 +56,8 @@ To see pGenie in action:
    ```
 
 5. **Observe the results:**
-   - The `artifacts/haskell/` directory is recreated
-   - The `artifacts/java/` directory is recreated
-   - The `artifacts/rust/` directory is recreated
-   - Haskell SDK is generated from your SQL
+
+The `artifacts/` directory is recreated with SDKs for all languages inside.
 
 ## Important: First Run Notice
 
