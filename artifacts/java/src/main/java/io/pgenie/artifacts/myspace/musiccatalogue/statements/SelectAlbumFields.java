@@ -8,8 +8,8 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import io.pgenie.artifacts.myspace.musiccatalogue.JdbcCodec;
-import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
+import io.codemine.java.postgresql.jdbc.Codec;
+import io.codemine.java.postgresql.jdbc.Statement;
 import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 
 /**
@@ -68,22 +68,22 @@ public record SelectAlbumFields(
          * Maps to {@code $id} in the template.
          */
         long id)
-        implements Statement<SelectAlbumFields.Output> {
-
+        implements Statement<SelectAlbumFields.Result> {
+    
     // -------------------------------------------------------------------------
     // Result type
     // -------------------------------------------------------------------------
     /**
      * Result of the statement parameterised by {@link SelectAlbumFields}.
      */
-    public static final class Output extends ArrayList<OutputRow> {
-        Output() {}
+    public static final class Result extends ArrayList<ResultRow> {
+        Result() {}
     }
 
     /**
-     * Row of {@link Output}.
+     * Row of {@link Result}.
      */
-    public record OutputRow(
+    public record ResultRow(
             /**
              * Maps to the {@code id} result-set column.
              */
@@ -112,7 +112,7 @@ public record SelectAlbumFields(
              * Maps to the {@code disc} result-set column. Nullable.
              */
             Optional<DiscInfo> disc) {}
-
+    
     // -------------------------------------------------------------------------
     // Statement implementation
     // -------------------------------------------------------------------------
@@ -152,28 +152,20 @@ public record SelectAlbumFields(
     }
 
     @Override
-    public Output decodeResultSet(ResultSet rs) throws SQLException {
-        Output output = new Output();
+    public Result decodeResultSet(ResultSet rs) throws SQLException {
+        Result output = new Result();
         int row = 0;
         
         while (rs.next()) {
-            long idCol = rs.getLong(1);
-            Optional<String> nameCol = Optional.ofNullable(rs.getString(2));
-            Optional<LocalDate> releasedCol;
-            {
-                Date releasedColBase = rs.getDate(3);
-                if (releasedColBase != null) {
-                    releasedCol = Optional.of(releasedColBase.toLocalDate());
-                } else {
-                    releasedCol = Optional.empty();
-                }
-            }
-            Optional<AlbumFormat> formatCol = Optional.ofNullable(new JdbcCodec<>(AlbumFormat.CODEC).decodeNullable(rs, row, 4));
-            Optional<RecordingInfo> recordingCol = Optional.ofNullable(new JdbcCodec<>(RecordingInfo.CODEC).decodeNullable(rs, row, 5));
-            Optional<List<TrackInfo>> tracksCol = Optional.ofNullable(new JdbcCodec<>(TrackInfo.CODEC.inDim()).decodeNullable(rs, row, 6));
-            Optional<DiscInfo> discCol = Optional.ofNullable(new JdbcCodec<>(DiscInfo.CODEC).decodeNullable(rs, row, 7));
+            long idCol = Codec.INT8.decodeNonNullable(rs, row, 1);
+            Optional<String> nameCol = Codec.TEXT.decodeOptional(rs, row, 2);
+            Optional<LocalDate> releasedCol = Codec.DATE.decodeOptional(rs, row, 3);
+            Optional<AlbumFormat> formatCol = AlbumFormat.CODEC.decodeOptional(rs, row, 4);
+            Optional<RecordingInfo> recordingCol = RecordingInfo.CODEC.decodeOptional(rs, row, 5);
+            Optional<List<TrackInfo>> tracksCol = TrackInfo.CODEC.inDim().decodeOptional(rs, row, 6);
+            Optional<DiscInfo> discCol = DiscInfo.CODEC.decodeOptional(rs, row, 7);
 
-            output.add(new OutputRow(idCol, nameCol, releasedCol, formatCol, recordingCol, tracksCol, discCol));
+            output.add(new ResultRow(idCol, nameCol, releasedCol, formatCol, recordingCol, tracksCol, discCol));
             row++;
         }
 
@@ -181,7 +173,7 @@ public record SelectAlbumFields(
     }
 
     @Override
-    public SelectAlbumFields.Output decodeAffectedRows(long affectedRows) {
+    public SelectAlbumFields.Result decodeAffectedRows(long affectedRows) {
         throw new UnsupportedOperationException();
     }
 }

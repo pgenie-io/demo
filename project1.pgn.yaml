@@ -13,7 +13,7 @@ name: music_catalogue
 #
 # In case of Haskell the version will be prepended with "0."
 # to comply to the PVP convention.
-version: 1.0.0
+version: 1.0.1
 
 # Artifacts that we want Pgenie to produce.
 # I.e., libraries for various platforms.
@@ -22,7 +22,7 @@ version: 1.0.0
 artifacts:
   haskell: https://raw.githubusercontent.com/pgenie-io/haskell.gen/v0.2.1/gen/Gen.dhall
   java:
-    gen: https://raw.githubusercontent.com/pgenie-io/java.gen/v0.2.0/gen/Gen.dhall
+    gen: https://raw.githubusercontent.com/pgenie-io/java.gen/v0.3.0/gen/Gen.dhall
     config:
       useOptional: true # Use Optional for nullable fields for clarity.
   rust: https://raw.githubusercontent.com/pgenie-io/rust.gen/v0.1.0/gen/Gen.dhall

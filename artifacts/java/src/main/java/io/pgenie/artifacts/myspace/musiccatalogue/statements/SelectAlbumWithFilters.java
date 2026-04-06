@@ -9,9 +9,8 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import io.codemine.java.postgresql.codecs.Codec;
-import io.pgenie.artifacts.myspace.musiccatalogue.JdbcCodec;
-import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
+import io.codemine.java.postgresql.jdbc.Codec;
+import io.codemine.java.postgresql.jdbc.Statement;
 import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 
 /**
@@ -76,22 +75,22 @@ public record SelectAlbumWithFilters(
          * Maps to {@code $order_by_released} in the template.
          */
         boolean orderByReleased)
-        implements Statement<SelectAlbumWithFilters.Output> {
-
+        implements Statement<SelectAlbumWithFilters.Result> {
+    
     // -------------------------------------------------------------------------
     // Result type
     // -------------------------------------------------------------------------
     /**
      * Result of the statement parameterised by {@link SelectAlbumWithFilters}.
      */
-    public static final class Output extends ArrayList<OutputRow> {
-        Output() {}
+    public static final class Result extends ArrayList<ResultRow> {
+        Result() {}
     }
 
     /**
-     * Row of {@link Output}.
+     * Row of {@link Result}.
      */
-    public record OutputRow(
+    public record ResultRow(
             /**
              * Maps to the {@code id} result-set column.
              */
@@ -108,7 +107,7 @@ public record SelectAlbumWithFilters(
              * Maps to the {@code format} result-set column. Nullable.
              */
             Optional<AlbumFormat> format) {}
-
+    
     // -------------------------------------------------------------------------
     // Statement implementation
     // -------------------------------------------------------------------------
@@ -159,10 +158,10 @@ public record SelectAlbumWithFilters(
         } else {
             ps.setNull(4, Types.VARCHAR);
         }
-        new JdbcCodec<>(AlbumFormat.CODEC).bind(ps, 5, this.format().orElse(null));
-        new JdbcCodec<>(AlbumFormat.CODEC).bind(ps, 6, this.format().orElse(null));
-        new JdbcCodec<>(Codec.TIMESTAMP).bind(ps, 7, this.releasedAfter().orElse(null));
-        new JdbcCodec<>(Codec.TIMESTAMP).bind(ps, 8, this.releasedAfter().orElse(null));
+        AlbumFormat.CODEC.bind(ps, 5, this.format().orElse(null));
+        AlbumFormat.CODEC.bind(ps, 6, this.format().orElse(null));
+        Codec.TIMESTAMP.bind(ps, 7, this.releasedAfter().orElse(null));
+        Codec.TIMESTAMP.bind(ps, 8, this.releasedAfter().orElse(null));
         if (this.nameLike().isPresent()) {
             ps.setString(9, this.nameLike().get());
         } else {
@@ -183,25 +182,17 @@ public record SelectAlbumWithFilters(
     }
 
     @Override
-    public Output decodeResultSet(ResultSet rs) throws SQLException {
-        Output output = new Output();
+    public Result decodeResultSet(ResultSet rs) throws SQLException {
+        Result output = new Result();
         int row = 0;
         
         while (rs.next()) {
-            long idCol = rs.getLong(1);
-            String nameCol = rs.getString(2);
-            Optional<LocalDate> releasedCol;
-            {
-                Date releasedColBase = rs.getDate(3);
-                if (releasedColBase != null) {
-                    releasedCol = Optional.of(releasedColBase.toLocalDate());
-                } else {
-                    releasedCol = Optional.empty();
-                }
-            }
-            Optional<AlbumFormat> formatCol = Optional.ofNullable(new JdbcCodec<>(AlbumFormat.CODEC).decodeNullable(rs, row, 4));
+            long idCol = Codec.INT8.decodeNonNullable(rs, row, 1);
+            String nameCol = Codec.TEXT.decodeNonNullable(rs, row, 2);
+            Optional<LocalDate> releasedCol = Codec.DATE.decodeOptional(rs, row, 3);
+            Optional<AlbumFormat> formatCol = AlbumFormat.CODEC.decodeOptional(rs, row, 4);
 
-            output.add(new OutputRow(idCol, nameCol, releasedCol, formatCol));
+            output.add(new ResultRow(idCol, nameCol, releasedCol, formatCol));
             row++;
         }
 
@@ -209,7 +200,7 @@ public record SelectAlbumWithFilters(
     }
 
     @Override
-    public SelectAlbumWithFilters.Output decodeAffectedRows(long affectedRows) {
+    public SelectAlbumWithFilters.Result decodeAffectedRows(long affectedRows) {
         throw new UnsupportedOperationException();
     }
 }

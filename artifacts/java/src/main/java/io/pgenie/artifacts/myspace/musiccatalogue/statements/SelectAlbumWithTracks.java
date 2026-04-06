@@ -8,8 +8,8 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import io.pgenie.artifacts.myspace.musiccatalogue.JdbcCodec;
-import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
+import io.codemine.java.postgresql.jdbc.Codec;
+import io.codemine.java.postgresql.jdbc.Statement;
 import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 
 /**
@@ -34,22 +34,22 @@ public record SelectAlbumWithTracks(
          * Maps to {@code $id} in the template.
          */
         long id)
-        implements Statement<SelectAlbumWithTracks.Output> {
-
+        implements Statement<SelectAlbumWithTracks.Result> {
+    
     // -------------------------------------------------------------------------
     // Result type
     // -------------------------------------------------------------------------
     /**
      * Result of the statement parameterised by {@link SelectAlbumWithTracks}.
      */
-    public static final class Output extends ArrayList<OutputRow> {
-        Output() {}
+    public static final class Result extends ArrayList<ResultRow> {
+        Result() {}
     }
 
     /**
-     * Row of {@link Output}.
+     * Row of {@link Result}.
      */
-    public record OutputRow(
+    public record ResultRow(
             /**
              * Maps to the {@code id} result-set column.
              */
@@ -66,7 +66,7 @@ public record SelectAlbumWithTracks(
              * Maps to the {@code disc} result-set column. Nullable.
              */
             Optional<DiscInfo> disc) {}
-
+    
     // -------------------------------------------------------------------------
     // Statement implementation
     // -------------------------------------------------------------------------
@@ -90,17 +90,17 @@ public record SelectAlbumWithTracks(
     }
 
     @Override
-    public Output decodeResultSet(ResultSet rs) throws SQLException {
-        Output output = new Output();
+    public Result decodeResultSet(ResultSet rs) throws SQLException {
+        Result output = new Result();
         int row = 0;
         
         while (rs.next()) {
-            long idCol = rs.getLong(1);
-            String nameCol = rs.getString(2);
-            List<TrackInfo> tracksCol = new JdbcCodec<>(TrackInfo.CODEC.inDim()).decodeNonNullable(rs, row, 3);
-            Optional<DiscInfo> discCol = Optional.ofNullable(new JdbcCodec<>(DiscInfo.CODEC).decodeNullable(rs, row, 4));
+            long idCol = Codec.INT8.decodeNonNullable(rs, row, 1);
+            String nameCol = Codec.TEXT.decodeNonNullable(rs, row, 2);
+            List<TrackInfo> tracksCol = TrackInfo.CODEC.inDim().decodeNonNullable(rs, row, 3);
+            Optional<DiscInfo> discCol = DiscInfo.CODEC.decodeOptional(rs, row, 4);
 
-            output.add(new OutputRow(idCol, nameCol, tracksCol, discCol));
+            output.add(new ResultRow(idCol, nameCol, tracksCol, discCol));
             row++;
         }
 
@@ -108,7 +108,7 @@ public record SelectAlbumWithTracks(
     }
 
     @Override
-    public SelectAlbumWithTracks.Output decodeAffectedRows(long affectedRows) {
+    public SelectAlbumWithTracks.Result decodeAffectedRows(long affectedRows) {
         throw new UnsupportedOperationException();
     }
 }

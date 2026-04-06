@@ -7,9 +7,8 @@ import java.sql.Date;
 import java.sql.Types;
 import java.time.*;
 import java.util.List;
-import io.codemine.java.postgresql.codecs.Codec;
-import io.pgenie.artifacts.myspace.musiccatalogue.JdbcCodec;
-import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
+import io.codemine.java.postgresql.jdbc.Codec;
+import io.codemine.java.postgresql.jdbc.Statement;
 import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 
 /**
@@ -46,20 +45,20 @@ public record InsertAlbum(
          * Maps to {@code $recording} in the template.
          */
         RecordingInfo recording)
-        implements Statement<InsertAlbum.Output> {
-
+        implements Statement<InsertAlbum.Result> {
+    
     // -------------------------------------------------------------------------
     // Result type
     // -------------------------------------------------------------------------
     /**
      * Result of the statement parameterised by {@link InsertAlbum}.
      */
-    public record Output(
+    public record Result(
             /**
              * Maps to the {@code id} result-set column.
              */
             long id) {}
-
+    
     // -------------------------------------------------------------------------
     // Statement implementation
     // -------------------------------------------------------------------------
@@ -76,8 +75,8 @@ public record InsertAlbum(
     public void bindParams(PreparedStatement ps) throws SQLException {
         ps.setString(1, this.name());
         ps.setDate(2, Date.valueOf(this.released()));
-        new JdbcCodec<>(AlbumFormat.CODEC).bind(ps, 3, this.format());
-        new JdbcCodec<>(RecordingInfo.CODEC).bind(ps, 4, this.recording());
+        AlbumFormat.CODEC.bind(ps, 3, this.format());
+        RecordingInfo.CODEC.bind(ps, 4, this.recording());
     }
 
     @Override
@@ -86,16 +85,16 @@ public record InsertAlbum(
     }
 
     @Override
-    public Output decodeResultSet(ResultSet rs) throws SQLException {
+    public Result decodeResultSet(ResultSet rs) throws SQLException {
         rs.next();
 
-        long idCol = rs.getLong(1);
+        long idCol = Codec.INT8.decodeNonNullable(rs, 0, 1);
 
-        return new Output(idCol);
+        return new Result(idCol);
     }
 
     @Override
-    public InsertAlbum.Output decodeAffectedRows(long affectedRows) {
+    public InsertAlbum.Result decodeAffectedRows(long affectedRows) {
         throw new UnsupportedOperationException();
     }
 }

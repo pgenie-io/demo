@@ -1,6 +1,6 @@
 cabal-version: 3.4
 name: my-space-music-catalogue
-version: 0.1.0.0
+version: 0.1.0.1
 synopsis: Type-safe mapping to the "music_catalogue" database
 description:
   This package provides type-safe Haskell bindings for the @music_catalogue@ database.

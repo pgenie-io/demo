@@ -7,8 +7,7 @@ import java.sql.Date;
 import java.sql.Types;
 import java.time.*;
 import java.util.Optional;
-import io.pgenie.artifacts.myspace.musiccatalogue.JdbcCodec;
-import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
+import io.codemine.java.postgresql.jdbc.Statement;
 import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 
 /**
@@ -38,7 +37,7 @@ public record UpdateAlbumReleased(
          */
         long id)
         implements Statement<Long> {
-
+    
     // -------------------------------------------------------------------------
     // Statement implementation
     // -------------------------------------------------------------------------

@@ -6,7 +6,7 @@
 
     <groupId>io.pgenie.artifacts.myspace</groupId>
     <artifactId>music-catalogue</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>MySpaceMusicCatalogue</name>
@@ -18,18 +18,11 @@
     </properties>
 
     <dependencies>
-        <!-- PostgreSQL codecs library -->
+        <!-- PostgreSQL JDBC bridge library -->
         <dependency>
             <groupId>io.codemine.java.postgresql</groupId>
-            <artifactId>codecs</artifactId>
-            <version>0.1.1</version>
-        </dependency>
-
-        <!-- PostgreSQL JDBC driver -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.7.10</version>
+            <artifactId>jdbc</artifactId>
+            <version>0.2.0</version>
         </dependency>
 
         <!-- Test dependencies -->

@@ -7,8 +7,8 @@ import java.sql.Date;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
-import io.pgenie.artifacts.myspace.musiccatalogue.JdbcCodec;
-import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
+import io.codemine.java.postgresql.jdbc.Codec;
+import io.codemine.java.postgresql.jdbc.Statement;
 import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 
 /**
@@ -35,22 +35,22 @@ public record SelectGenreByArtist(
          * Maps to {@code $artist} in the template.
          */
         int artist)
-        implements Statement<SelectGenreByArtist.Output> {
-
+        implements Statement<SelectGenreByArtist.Result> {
+    
     // -------------------------------------------------------------------------
     // Result type
     // -------------------------------------------------------------------------
     /**
      * Result of the statement parameterised by {@link SelectGenreByArtist}.
      */
-    public static final class Output extends ArrayList<OutputRow> {
-        Output() {}
+    public static final class Result extends ArrayList<ResultRow> {
+        Result() {}
     }
 
     /**
-     * Row of {@link Output}.
+     * Row of {@link Result}.
      */
-    public record OutputRow(
+    public record ResultRow(
             /**
              * Maps to the {@code id} result-set column.
              */
@@ -59,7 +59,7 @@ public record SelectGenreByArtist(
              * Maps to the {@code name} result-set column.
              */
             String name) {}
-
+    
     // -------------------------------------------------------------------------
     // Statement implementation
     // -------------------------------------------------------------------------
@@ -85,15 +85,15 @@ public record SelectGenreByArtist(
     }
 
     @Override
-    public Output decodeResultSet(ResultSet rs) throws SQLException {
-        Output output = new Output();
+    public Result decodeResultSet(ResultSet rs) throws SQLException {
+        Result output = new Result();
         int row = 0;
         
         while (rs.next()) {
-            int idCol = rs.getInt(1);
-            String nameCol = rs.getString(2);
+            int idCol = Codec.INT4.decodeNonNullable(rs, row, 1);
+            String nameCol = Codec.TEXT.decodeNonNullable(rs, row, 2);
 
-            output.add(new OutputRow(idCol, nameCol));
+            output.add(new ResultRow(idCol, nameCol));
             row++;
         }
 
@@ -101,7 +101,7 @@ public record SelectGenreByArtist(
     }
 
     @Override
-    public SelectGenreByArtist.Output decodeAffectedRows(long affectedRows) {
+    public SelectGenreByArtist.Result decodeAffectedRows(long affectedRows) {
         throw new UnsupportedOperationException();
     }
 }

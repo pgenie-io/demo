@@ -2,7 +2,7 @@ package io.pgenie.artifacts.myspace.musiccatalogue.types;
 
 import java.util.Map;
 
-import io.codemine.java.postgresql.codecs.EnumCodec;
+import io.codemine.java.postgresql.jdbc.Codec;
 
 /**
  * Representation of the {@code album_format} user-declared PostgreSQL
@@ -39,7 +39,7 @@ public enum AlbumFormat {
      */
     Sacd;
 
-    public static final EnumCodec<AlbumFormat> CODEC = new EnumCodec<>(
+    public static final Codec<AlbumFormat> CODEC = Codec.enumeration(
             "public", "album_format",
             Map.ofEntries(
                     Map.entry(Vinyl, "Vinyl"),

@@ -4,8 +4,7 @@ import java.time.*;
 import java.util.List;
 import java.util.Optional;
 
-import io.codemine.java.postgresql.codecs.Codec;
-import io.codemine.java.postgresql.codecs.CompositeCodec;
+import io.codemine.java.postgresql.jdbc.Codec;
 
 /**
  * Representation of the {@code recording_info} user-declared PostgreSQL
@@ -36,13 +35,12 @@ public record RecordingInfo(
          */
         Optional<LocalDate> recordedDate) {
 
-    public static final CompositeCodec<RecordingInfo> CODEC = new CompositeCodec<>(
+    public static final Codec<RecordingInfo> CODEC = Codec.<RecordingInfo>composite(
             "public", "recording_info",
-            (String studioName) -> (String city) -> (String country) -> (LocalDate recordedDate) -> new RecordingInfo(
-                    Optional.ofNullable(studioName), Optional.ofNullable(city), Optional.ofNullable(country), Optional.ofNullable(recordedDate)),
-            new CompositeCodec.Field<>("studio_name", row -> row.studioName().orElse(null), Codec.TEXT),
-            new CompositeCodec.Field<>("city", row -> row.city().orElse(null), Codec.TEXT),
-            new CompositeCodec.Field<>("country", row -> row.country().orElse(null), Codec.TEXT),
-            new CompositeCodec.Field<>("recorded_date", row -> row.recordedDate().orElse(null), Codec.DATE));
+            objects -> new RecordingInfo((( Optional<String> ) objects[0]), (( Optional<String> ) objects[1]), (( Optional<String> ) objects[2]), (( Optional<LocalDate> ) objects[3])),
+            Codec.<RecordingInfo, String>field("studio_name", Codec.TEXT, row -> row.studioName().orElse(null)),
+            Codec.<RecordingInfo, String>field("city", Codec.TEXT, row -> row.city().orElse(null)),
+            Codec.<RecordingInfo, String>field("country", Codec.TEXT, row -> row.country().orElse(null)),
+            Codec.<RecordingInfo, LocalDate>field("recorded_date", Codec.DATE, row -> row.recordedDate().orElse(null)));
 
 }

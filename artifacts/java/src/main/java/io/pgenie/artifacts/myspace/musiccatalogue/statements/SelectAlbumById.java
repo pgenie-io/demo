@@ -8,8 +8,8 @@ import java.sql.Types;
 import java.time.*;
 import java.util.List;
 import java.util.Optional;
-import io.pgenie.artifacts.myspace.musiccatalogue.JdbcCodec;
-import io.pgenie.artifacts.myspace.musiccatalogue.Statement;
+import io.codemine.java.postgresql.jdbc.Codec;
+import io.codemine.java.postgresql.jdbc.Statement;
 import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 
 /**
@@ -36,15 +36,15 @@ public record SelectAlbumById(
          * Maps to {@code $id} in the template. Nullable.
          */
         Optional<Long> id)
-        implements Statement<Optional<SelectAlbumById.OutputRow>> {
-
+        implements Statement<Optional<SelectAlbumById.ResultRow>> {
+    
     // -------------------------------------------------------------------------
     // Result type
     // -------------------------------------------------------------------------
     /**
      * Result of the statement parameterised by {@link SelectAlbumById}.
      */
-    public record OutputRow(
+    public record ResultRow(
             /**
              * Maps to the {@code id} result-set column.
              */
@@ -73,7 +73,7 @@ public record SelectAlbumById(
              * Maps to the {@code disc} result-set column. Nullable.
              */
             Optional<DiscInfo> disc) {}
-
+    
     // -------------------------------------------------------------------------
     // Statement implementation
     // -------------------------------------------------------------------------
@@ -103,31 +103,23 @@ public record SelectAlbumById(
     }
 
     @Override
-    public Optional<OutputRow> decodeResultSet(ResultSet rs) throws SQLException {
+    public Optional<ResultRow> decodeResultSet(ResultSet rs) throws SQLException {
         if (!rs.next()) {
             return Optional.empty();
         }
-        long idCol = rs.getLong(1);
-        String nameCol = rs.getString(2);
-        Optional<LocalDate> releasedCol;
-        {
-            Date releasedColBase = rs.getDate(3);
-            if (releasedColBase != null) {
-                releasedCol = Optional.of(releasedColBase.toLocalDate());
-            } else {
-                releasedCol = Optional.empty();
-            }
-        }
-        Optional<AlbumFormat> formatCol = Optional.ofNullable(new JdbcCodec<>(AlbumFormat.CODEC).decodeNullable(rs, 0, 4));
-        Optional<RecordingInfo> recordingCol = Optional.ofNullable(new JdbcCodec<>(RecordingInfo.CODEC).decodeNullable(rs, 0, 5));
-        Optional<List<Optional<TrackInfo>>> tracksCol = Optional.ofNullable(new JdbcCodec<>(TrackInfo.CODEC.inDim()).decodeNullable(rs, 0, 6).stream().map(Optional::ofNullable).toList());
-        Optional<DiscInfo> discCol = Optional.ofNullable(new JdbcCodec<>(DiscInfo.CODEC).decodeNullable(rs, 0, 7));
+        long idCol = Codec.INT8.decodeNonNullable(rs, 0, 1);
+        String nameCol = Codec.TEXT.decodeNonNullable(rs, 0, 2);
+        Optional<LocalDate> releasedCol = Codec.DATE.decodeOptional(rs, 0, 3);
+        Optional<AlbumFormat> formatCol = AlbumFormat.CODEC.decodeOptional(rs, 0, 4);
+        Optional<RecordingInfo> recordingCol = RecordingInfo.CODEC.decodeOptional(rs, 0, 5);
+        Optional<List<Optional<TrackInfo>>> tracksCol = TrackInfo.CODEC.inDim().decodeOptional(rs, 0, 6).map(list1 -> list1.stream().map(Optional::ofNullable).toList());
+        Optional<DiscInfo> discCol = DiscInfo.CODEC.decodeOptional(rs, 0, 7);
 
-        return Optional.of(new OutputRow(idCol, nameCol, releasedCol, formatCol, recordingCol, tracksCol, discCol));
+        return Optional.of(new ResultRow(idCol, nameCol, releasedCol, formatCol, recordingCol, tracksCol, discCol));
     }
 
     @Override
-    public Optional<SelectAlbumById.OutputRow> decodeAffectedRows(long affectedRows) {
+    public Optional<SelectAlbumById.ResultRow> decodeAffectedRows(long affectedRows) {
         throw new UnsupportedOperationException();
     }
 }

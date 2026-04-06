@@ -1,6 +1,6 @@
 [package]
 name = "my-space-music-catalogue"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 description = "Type-safe mapping to the music_catalogue database"
 

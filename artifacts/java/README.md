@@ -32,7 +32,7 @@ dependency:
 <dependency>
     <groupId>io.pgenie.artifacts.myspace</groupId>
     <artifactId>music-catalogue</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 

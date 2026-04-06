@@ -4,8 +4,7 @@ import java.time.*;
 import java.util.List;
 import java.util.Optional;
 
-import io.codemine.java.postgresql.codecs.Codec;
-import io.codemine.java.postgresql.codecs.CompositeCodec;
+import io.codemine.java.postgresql.jdbc.Codec;
 
 /**
  * Representation of the {@code disc_info} user-declared PostgreSQL
@@ -28,11 +27,10 @@ public record DiscInfo(
          */
         Optional<RecordingInfo> recording) {
 
-    public static final CompositeCodec<DiscInfo> CODEC = new CompositeCodec<>(
+    public static final Codec<DiscInfo> CODEC = Codec.<DiscInfo>composite(
             "public", "disc_info",
-            (String name) -> (RecordingInfo recording) -> new DiscInfo(
-                    Optional.ofNullable(name), Optional.ofNullable(recording)),
-            new CompositeCodec.Field<>("name", row -> row.name().orElse(null), Codec.TEXT),
-            new CompositeCodec.Field<>("recording", row -> row.recording().orElse(null), RecordingInfo.CODEC));
+            objects -> new DiscInfo((( Optional<String> ) objects[0]), (( Optional<RecordingInfo> ) objects[1])),
+            Codec.<DiscInfo, String>field("name", Codec.TEXT, row -> row.name().orElse(null)),
+            Codec.<DiscInfo, RecordingInfo>field("recording", RecordingInfo.CODEC, row -> row.recording().orElse(null)));
 
 }
