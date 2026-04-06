@@ -1,10 +1,9 @@
 package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
-import java.sql.Types;
 import java.time.*;
 import java.util.List;
 import io.codemine.java.postgresql.jdbc.Codec;
@@ -73,8 +72,8 @@ public record InsertAlbum(
 
     @Override
     public void bindParams(PreparedStatement ps) throws SQLException {
-        ps.setString(1, this.name());
-        ps.setDate(2, Date.valueOf(this.released()));
+        Codec.TEXT.bind(ps, 1, this.name());
+        Codec.DATE.bind(ps, 2, this.released());
         AlbumFormat.CODEC.bind(ps, 3, this.format());
         RecordingInfo.CODEC.bind(ps, 4, this.recording());
     }

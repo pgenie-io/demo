@@ -1,10 +1,9 @@
 package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
-import java.sql.Types;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,42 +137,18 @@ public record SelectAlbumWithFilters(
 
     @Override
     public void bindParams(PreparedStatement ps) throws SQLException {
-        if (this.artistName().isPresent()) {
-            ps.setString(1, this.artistName().get());
-        } else {
-            ps.setNull(1, Types.VARCHAR);
-        }
-        if (this.artistName().isPresent()) {
-            ps.setString(2, this.artistName().get());
-        } else {
-            ps.setNull(2, Types.VARCHAR);
-        }
-        if (this.genreName().isPresent()) {
-            ps.setString(3, this.genreName().get());
-        } else {
-            ps.setNull(3, Types.VARCHAR);
-        }
-        if (this.genreName().isPresent()) {
-            ps.setString(4, this.genreName().get());
-        } else {
-            ps.setNull(4, Types.VARCHAR);
-        }
+        Codec.TEXT.bind(ps, 1, this.artistName().orElse(null));
+        Codec.TEXT.bind(ps, 2, this.artistName().orElse(null));
+        Codec.TEXT.bind(ps, 3, this.genreName().orElse(null));
+        Codec.TEXT.bind(ps, 4, this.genreName().orElse(null));
         AlbumFormat.CODEC.bind(ps, 5, this.format().orElse(null));
         AlbumFormat.CODEC.bind(ps, 6, this.format().orElse(null));
         Codec.TIMESTAMP.bind(ps, 7, this.releasedAfter().orElse(null));
         Codec.TIMESTAMP.bind(ps, 8, this.releasedAfter().orElse(null));
-        if (this.nameLike().isPresent()) {
-            ps.setString(9, this.nameLike().get());
-        } else {
-            ps.setNull(9, Types.VARCHAR);
-        }
-        if (this.nameLike().isPresent()) {
-            ps.setString(10, this.nameLike().get());
-        } else {
-            ps.setNull(10, Types.VARCHAR);
-        }
-        ps.setBoolean(11, this.orderByName());
-        ps.setBoolean(12, this.orderByReleased());
+        Codec.TEXT.bind(ps, 9, this.nameLike().orElse(null));
+        Codec.TEXT.bind(ps, 10, this.nameLike().orElse(null));
+        Codec.BOOL.bind(ps, 11, this.orderByName());
+        Codec.BOOL.bind(ps, 12, this.orderByReleased());
     }
 
     @Override

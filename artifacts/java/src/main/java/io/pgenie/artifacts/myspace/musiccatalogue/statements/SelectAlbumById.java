@@ -1,10 +1,9 @@
 package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
-import java.sql.Types;
 import java.time.*;
 import java.util.List;
 import java.util.Optional;
@@ -90,11 +89,7 @@ public record SelectAlbumById(
 
     @Override
     public void bindParams(PreparedStatement ps) throws SQLException {
-        if (this.id().isPresent()) {
-            ps.setLong(1, this.id().get());
-        } else {
-            ps.setNull(1, Types.BIGINT);
-        }
+        Codec.INT8.bind(ps, 1, this.id().orElse(null));
     }
 
     @Override

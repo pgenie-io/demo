@@ -1,9 +1,9 @@
 package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +95,7 @@ public record SelectAlbumByName(
 
     @Override
     public void bindParams(PreparedStatement ps) throws SQLException {
-        ps.setString(1, this.name());
+        Codec.TEXT.bind(ps, 1, this.name());
     }
 
     @Override

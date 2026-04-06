@@ -1,12 +1,12 @@
 package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
-import java.sql.Types;
 import java.time.*;
 import java.util.Optional;
+import io.codemine.java.postgresql.jdbc.Codec;
 import io.codemine.java.postgresql.jdbc.Statement;
 import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 
@@ -52,12 +52,8 @@ public record UpdateAlbumReleased(
 
     @Override
     public void bindParams(PreparedStatement ps) throws SQLException {
-        if (this.released().isPresent()) {
-            ps.setDate(1, Date.valueOf(this.released().get()));
-        } else {
-            ps.setNull(1, Types.DATE);
-        }
-        ps.setLong(2, this.id());
+        Codec.DATE.bind(ps, 1, this.released().orElse(null));
+        Codec.INT8.bind(ps, 2, this.id());
     }
 
     /**

@@ -1,9 +1,9 @@
 package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public record SelectGenreByArtist(
 
     @Override
     public void bindParams(PreparedStatement ps) throws SQLException {
-        ps.setInt(1, this.artist());
+        Codec.INT4.bind(ps, 1, this.artist());
     }
 
     @Override

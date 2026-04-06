@@ -22,7 +22,7 @@ version: 1.0.1
 artifacts:
   haskell: https://raw.githubusercontent.com/pgenie-io/haskell.gen/v0.2.1/gen/Gen.dhall
   java:
-    gen: https://raw.githubusercontent.com/pgenie-io/java.gen/v0.3.0/gen/Gen.dhall
+    gen: https://raw.githubusercontent.com/pgenie-io/java.gen/v0.3.1/gen/Gen.dhall
     config:
       useOptional: true # Use Optional for nullable fields for clarity.
   rust: https://raw.githubusercontent.com/pgenie-io/rust.gen/v0.1.0/gen/Gen.dhall

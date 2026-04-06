@@ -1,9 +1,9 @@
 package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -137,13 +137,13 @@ public record SelectAlbumFields(
 
     @Override
     public void bindParams(PreparedStatement ps) throws SQLException {
-        ps.setBoolean(1, this.includeName());
-        ps.setBoolean(2, this.includeReleased());
-        ps.setBoolean(3, this.includeFormat());
-        ps.setBoolean(4, this.includeRecording());
-        ps.setBoolean(5, this.includeTracks());
-        ps.setBoolean(6, this.includeDisc());
-        ps.setLong(7, this.id());
+        Codec.BOOL.bind(ps, 1, this.includeName());
+        Codec.BOOL.bind(ps, 2, this.includeReleased());
+        Codec.BOOL.bind(ps, 3, this.includeFormat());
+        Codec.BOOL.bind(ps, 4, this.includeRecording());
+        Codec.BOOL.bind(ps, 5, this.includeTracks());
+        Codec.BOOL.bind(ps, 6, this.includeDisc());
+        Codec.INT8.bind(ps, 7, this.id());
     }
 
     @Override
