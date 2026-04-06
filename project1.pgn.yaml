@@ -15,6 +15,9 @@ name: music_catalogue
 # to comply to the PVP convention.
 version: 1.0.1
 
+# PostgreSQL version to be used for validating the schema and queries.
+postgres: 18
+
 # Artifacts that we want Pgenie to produce.
 # I.e., libraries for various platforms.
 # If you don't specify any artifacts Pgenie simply validates your schema
