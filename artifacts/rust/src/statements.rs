@@ -3,6 +3,7 @@
 //! Each sub-module exposes a parameter struct that implements [`crate::mapping::Statement`].
 
 pub mod insert_album;
+pub mod insert_multiple_albums;
 pub mod select_album_by_format;
 pub mod select_album_by_id;
 pub mod select_album_by_name;

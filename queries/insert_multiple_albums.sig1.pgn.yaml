@@ -1,0 +1,22 @@
+parameters:
+  name:
+    type: text
+    not_null: true
+    dims: 1
+    element_not_null: true
+  released:
+    type: date
+    not_null: true
+    dims: 1
+    element_not_null: true
+  format:
+    type: album_format
+    not_null: true
+    dims: 1
+    element_not_null: true
+result:
+  cardinality: many
+  columns:
+    id:
+      type: int8
+      not_null: true

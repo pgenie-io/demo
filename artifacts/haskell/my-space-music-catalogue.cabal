@@ -29,6 +29,7 @@ library
   other-modules:
     MySpace.MusicCatalogue.Prelude
     MySpace.MusicCatalogue.Statements.InsertAlbum
+    MySpace.MusicCatalogue.Statements.InsertMultipleAlbums
     MySpace.MusicCatalogue.Statements.SelectAlbumByFormat
     MySpace.MusicCatalogue.Statements.SelectAlbumById
     MySpace.MusicCatalogue.Statements.SelectAlbumByName
