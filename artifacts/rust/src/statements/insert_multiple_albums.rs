@@ -53,11 +53,11 @@ impl crate::mapping::Statement for Input {
                        from unnest(\n\
                          $1::text[],\n\
                          $2::date[],\n\
-                         $3::public.album_format::album_format[]\n\
+                         $3::public.album_format[]::album_format[]\n\
                        )\n\
                        returning id";
 
-    const PARAM_TYPES: &'static [tokio_postgres::types::Type] = &[Type::TEXT, Type::DATE, Type::UNKNOWN];
+    const PARAM_TYPES: &'static [tokio_postgres::types::Type] = &[Type::TEXT_ARRAY, Type::DATE_ARRAY, Type::UNKNOWN];
 
     #[allow(refining_impl_trait)]
     fn encode_params(
