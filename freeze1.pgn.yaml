@@ -1,4 +1,5 @@
 # Map of generator hashes by url
 https://raw.githubusercontent.com/pgenie-io/haskell.gen/v0.2.1/gen/Gen.dhall: sha256:5bed6d6b5a047e1f908c6432fca54a0e9c66c188257756b1b8a8fcbd7b1eace3
+https://raw.githubusercontent.com/pgenie-io/java.gen/847c451d191ca3d262e4592912ae1016c4340e52/gen/Gen.dhall: sha256:8984874d33bb0e60edaec60bdf5af0afe04b08024862d2ec3044eb328aad26b8
 https://raw.githubusercontent.com/pgenie-io/java.gen/v0.3.3/gen/Gen.dhall: sha256:f6f5cdd97121a0e8d4915e963e3caff68ca86972adb58346fffdde869d6797ea
 https://raw.githubusercontent.com/pgenie-io/rust.gen/v0.1.0/gen/Gen.dhall: sha256:38d40d5d55a60f0fb6a131a30cb7c4fb417e50710c6344df401b2e424b586a66
