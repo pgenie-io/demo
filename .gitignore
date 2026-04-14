@@ -21,4 +21,5 @@
 !/project1.pgn.yaml
 
 # Ignore noise:
+Cargo.lock
 .DS_Store

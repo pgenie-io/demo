@@ -3,7 +3,6 @@ package io.pgenie.artifacts.myspace.musiccatalogue.types;
 import java.time.*;
 import java.util.List;
 import java.util.Optional;
-
 import io.codemine.java.postgresql.jdbc.Codec;
 
 /**

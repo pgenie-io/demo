@@ -1,15 +1,14 @@
 package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import io.codemine.java.postgresql.jdbc.Codec;
 import io.codemine.java.postgresql.jdbc.Statement;
-import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
 
 /**
  * Type-safe binding for the {@code select_genre_by_artist} query.
