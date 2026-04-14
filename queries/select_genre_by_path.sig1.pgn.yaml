@@ -1,0 +1,16 @@
+parameters:
+  path:
+    type: ltree
+    not_null: true
+result:
+  cardinality: many
+  columns:
+    id:
+      type: int4
+      not_null: true
+    name:
+      type: text
+      not_null: true
+    path:
+      type: ltree
+      not_null: true

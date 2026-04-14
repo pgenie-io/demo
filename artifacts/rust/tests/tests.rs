@@ -44,6 +44,7 @@ async fn apply_migrations(host_port: u16) {
         ("3.sql", include_str!("../migrations/3.sql")),
         ("4.sql", include_str!("../migrations/4.sql")),
         ("5.sql", include_str!("../migrations/5.sql")),
+        ("6.sql", include_str!("../migrations/6.sql")),
     ];
 
     let (client, conn) = tokio_postgres::connect(
