@@ -7,7 +7,6 @@ pub mod insert_multiple_albums;
 pub mod select_album_by_format;
 pub mod select_album_by_id;
 pub mod select_album_by_name;
-pub mod select_album_fields;
 pub mod select_album_with_filters;
 pub mod select_album_with_tracks;
 pub mod select_genre_by_artist;

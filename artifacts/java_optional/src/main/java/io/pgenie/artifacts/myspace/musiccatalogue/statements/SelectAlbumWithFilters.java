@@ -17,11 +17,18 @@ import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
  * <h2>SQL Template</h2>
  *
  * <pre>{@code
+ * -- Demonstrates static query equivalent of dynamic field selection.
+ * -- Boolean flags control which fields are included in the result,
+ * -- returning NULL for fields the caller opts out of.
+ * -- Also demonstrates optional filters and ordering criteria.
  * SELECT
  *   album.id,
- *   album.name,
- *   album.released,
- *   album.format
+ *   CASE WHEN $include_name THEN album.name END AS name,
+ *   CASE WHEN $include_released THEN album.released END AS released,
+ *   CASE WHEN $include_format THEN album.format END AS format,
+ *   CASE WHEN $include_recording THEN album.recording END AS recording,
+ *   CASE WHEN $include_tracks THEN album.tracks END AS tracks,
+ *   CASE WHEN $include_disc THEN album.disc END AS disc
  * FROM album
  * LEFT JOIN album_artist ON album_artist.album = album.id
  * LEFT JOIN artist ON artist.id = album_artist.artist
@@ -45,6 +52,30 @@ import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
  * <a href="https://pgenie.io">pGenie</a> code generator.
  */
 public record SelectAlbumWithFilters(
+        /**
+         * Maps to {@code $include_name} in the template.
+         */
+        boolean includeName,
+        /**
+         * Maps to {@code $include_released} in the template.
+         */
+        boolean includeReleased,
+        /**
+         * Maps to {@code $include_format} in the template.
+         */
+        boolean includeFormat,
+        /**
+         * Maps to {@code $include_recording} in the template.
+         */
+        boolean includeRecording,
+        /**
+         * Maps to {@code $include_tracks} in the template.
+         */
+        boolean includeTracks,
+        /**
+         * Maps to {@code $include_disc} in the template.
+         */
+        boolean includeDisc,
         /**
          * Maps to {@code $artist_name} in the template. Nullable.
          */
@@ -94,9 +125,9 @@ public record SelectAlbumWithFilters(
              */
             long id,
             /**
-             * Maps to the {@code name} result-set column.
+             * Maps to the {@code name} result-set column. Nullable.
              */
-            String name,
+            Optional<String> name,
             /**
              * Maps to the {@code released} result-set column. Nullable.
              */
@@ -104,7 +135,19 @@ public record SelectAlbumWithFilters(
             /**
              * Maps to the {@code format} result-set column. Nullable.
              */
-            Optional<AlbumFormat> format) {}
+            Optional<AlbumFormat> format,
+            /**
+             * Maps to the {@code recording} result-set column. Nullable.
+             */
+            Optional<RecordingInfo> recording,
+            /**
+             * Maps to the {@code tracks} result-set column. Nullable.
+             */
+            Optional<List<TrackInfo>> tracks,
+            /**
+             * Maps to the {@code disc} result-set column. Nullable.
+             */
+            Optional<DiscInfo> disc) {}
     
     // -------------------------------------------------------------------------
     // Statement implementation
@@ -112,11 +155,18 @@ public record SelectAlbumWithFilters(
     @Override
     public String sql() {
         return """
+               -- Demonstrates static query equivalent of dynamic field selection.
+               -- Boolean flags control which fields are included in the result,
+               -- returning NULL for fields the caller opts out of.
+               -- Also demonstrates optional filters and ordering criteria.
                SELECT
                  album.id,
-                 album.name,
-                 album.released,
-                 album.format
+                 CASE WHEN ? THEN album.name END AS name,
+                 CASE WHEN ? THEN album.released END AS released,
+                 CASE WHEN ? THEN album.format END AS format,
+                 CASE WHEN ? THEN album.recording END AS recording,
+                 CASE WHEN ? THEN album.tracks END AS tracks,
+                 CASE WHEN ? THEN album.disc END AS disc
                FROM album
                LEFT JOIN album_artist ON album_artist.album = album.id
                LEFT JOIN artist ON artist.id = album_artist.artist
@@ -136,18 +186,24 @@ public record SelectAlbumWithFilters(
 
     @Override
     public void bindParams(PreparedStatement ps) throws SQLException {
-        Codec.TEXT.bind(ps, 1, this.artistName().orElse(null));
-        Codec.TEXT.bind(ps, 2, this.artistName().orElse(null));
-        Codec.TEXT.bind(ps, 3, this.genreName().orElse(null));
-        Codec.TEXT.bind(ps, 4, this.genreName().orElse(null));
-        AlbumFormat.CODEC.bind(ps, 5, this.format().orElse(null));
-        AlbumFormat.CODEC.bind(ps, 6, this.format().orElse(null));
-        Codec.TIMESTAMP.bind(ps, 7, this.releasedAfter().orElse(null));
-        Codec.TIMESTAMP.bind(ps, 8, this.releasedAfter().orElse(null));
-        Codec.TEXT.bind(ps, 9, this.nameLike().orElse(null));
-        Codec.TEXT.bind(ps, 10, this.nameLike().orElse(null));
-        Codec.BOOL.bind(ps, 11, this.orderByName());
-        Codec.BOOL.bind(ps, 12, this.orderByReleased());
+        Codec.BOOL.bind(ps, 1, this.includeName());
+        Codec.BOOL.bind(ps, 2, this.includeReleased());
+        Codec.BOOL.bind(ps, 3, this.includeFormat());
+        Codec.BOOL.bind(ps, 4, this.includeRecording());
+        Codec.BOOL.bind(ps, 5, this.includeTracks());
+        Codec.BOOL.bind(ps, 6, this.includeDisc());
+        Codec.TEXT.bind(ps, 7, this.artistName().orElse(null));
+        Codec.TEXT.bind(ps, 8, this.artistName().orElse(null));
+        Codec.TEXT.bind(ps, 9, this.genreName().orElse(null));
+        Codec.TEXT.bind(ps, 10, this.genreName().orElse(null));
+        AlbumFormat.CODEC.bind(ps, 11, this.format().orElse(null));
+        AlbumFormat.CODEC.bind(ps, 12, this.format().orElse(null));
+        Codec.TIMESTAMP.bind(ps, 13, this.releasedAfter().orElse(null));
+        Codec.TIMESTAMP.bind(ps, 14, this.releasedAfter().orElse(null));
+        Codec.TEXT.bind(ps, 15, this.nameLike().orElse(null));
+        Codec.TEXT.bind(ps, 16, this.nameLike().orElse(null));
+        Codec.BOOL.bind(ps, 17, this.orderByName());
+        Codec.BOOL.bind(ps, 18, this.orderByReleased());
     }
 
     @Override
@@ -162,11 +218,14 @@ public record SelectAlbumWithFilters(
         
         while (rs.next()) {
             long idCol = Codec.INT8.decodeNonNullable(rs, row, 1);
-            String nameCol = Codec.TEXT.decodeNonNullable(rs, row, 2);
+            Optional<String> nameCol = Codec.TEXT.decodeOptional(rs, row, 2);
             Optional<LocalDate> releasedCol = Codec.DATE.decodeOptional(rs, row, 3);
             Optional<AlbumFormat> formatCol = AlbumFormat.CODEC.decodeOptional(rs, row, 4);
+            Optional<RecordingInfo> recordingCol = RecordingInfo.CODEC.decodeOptional(rs, row, 5);
+            Optional<List<TrackInfo>> tracksCol = TrackInfo.CODEC.inDim().decodeOptional(rs, row, 6);
+            Optional<DiscInfo> discCol = DiscInfo.CODEC.decodeOptional(rs, row, 7);
 
-            output.add(new ResultRow(idCol, nameCol, releasedCol, formatCol));
+            output.add(new ResultRow(idCol, nameCol, releasedCol, formatCol, recordingCol, tracksCol, discCol));
             row++;
         }
 
