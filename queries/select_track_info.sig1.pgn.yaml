@@ -1,0 +1,11 @@
+idempotent: false
+parameters: {}
+result:
+  cardinality: one
+  columns:
+    track_info:
+      type: track_info
+      not_null: false
+    id:
+      type: int4
+      not_null: false

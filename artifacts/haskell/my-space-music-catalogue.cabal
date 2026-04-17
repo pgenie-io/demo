@@ -36,6 +36,7 @@ library
     MySpace.MusicCatalogue.Statements.SelectAlbumWithFilters
     MySpace.MusicCatalogue.Statements.SelectAlbumWithTracks
     MySpace.MusicCatalogue.Statements.SelectGenreByArtist
+    MySpace.MusicCatalogue.Statements.SelectTrackInfo
     MySpace.MusicCatalogue.Statements.UpdateAlbumRecordingReturning
     MySpace.MusicCatalogue.Statements.UpdateAlbumReleased
     MySpace.MusicCatalogue.Types.AlbumFormat

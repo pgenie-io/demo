@@ -10,5 +10,6 @@ pub mod select_album_by_name;
 pub mod select_album_with_filters;
 pub mod select_album_with_tracks;
 pub mod select_genre_by_artist;
+pub mod select_track_info;
 pub mod update_album_recording_returning;
 pub mod update_album_released;

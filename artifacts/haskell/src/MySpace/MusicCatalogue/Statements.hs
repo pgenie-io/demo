@@ -19,6 +19,8 @@ module MySpace.MusicCatalogue.Statements
     module MySpace.MusicCatalogue.Statements.SelectAlbumWithTracks,
     -- ** SelectGenreByArtist
     module MySpace.MusicCatalogue.Statements.SelectGenreByArtist,
+    -- ** SelectTrackInfo
+    module MySpace.MusicCatalogue.Statements.SelectTrackInfo,
     -- ** UpdateAlbumRecordingReturning
     module MySpace.MusicCatalogue.Statements.UpdateAlbumRecordingReturning,
     -- ** UpdateAlbumReleased
@@ -34,5 +36,6 @@ import MySpace.MusicCatalogue.Statements.SelectAlbumByName
 import MySpace.MusicCatalogue.Statements.SelectAlbumWithFilters
 import MySpace.MusicCatalogue.Statements.SelectAlbumWithTracks
 import MySpace.MusicCatalogue.Statements.SelectGenreByArtist
+import MySpace.MusicCatalogue.Statements.SelectTrackInfo
 import MySpace.MusicCatalogue.Statements.UpdateAlbumRecordingReturning
 import MySpace.MusicCatalogue.Statements.UpdateAlbumReleased

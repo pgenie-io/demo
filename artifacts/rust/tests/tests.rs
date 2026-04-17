@@ -128,6 +128,7 @@ async fn all_declared_statements_execute_with_default_values() {
     assert_statement_executes::<statements::select_album_with_filters::Input>(&pool, "select_album_with_filters").await;
     assert_statement_executes::<statements::select_album_with_tracks::Input>(&pool, "select_album_with_tracks").await;
     assert_statement_executes::<statements::select_genre_by_artist::Input>(&pool, "select_genre_by_artist").await;
+    assert_statement_executes::<statements::select_track_info::Input>(&pool, "select_track_info").await;
     assert_statement_executes::<statements::update_album_recording_returning::Input>(&pool, "update_album_recording_returning").await;
     assert_statement_executes::<statements::update_album_released::Input>(&pool, "update_album_released").await;
 }
