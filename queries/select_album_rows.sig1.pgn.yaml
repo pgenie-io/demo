@@ -1,0 +1,8 @@
+idempotent: false
+parameters: {}
+result:
+  cardinality: many
+  columns:
+    album:
+      type: album
+      not_null: false

@@ -17,6 +17,7 @@
 !/artifacts/
 !/migrations/
 !/queries/
+!/types/
 !/freeze1.pgn.yaml
 !/project1.pgn.yaml
 

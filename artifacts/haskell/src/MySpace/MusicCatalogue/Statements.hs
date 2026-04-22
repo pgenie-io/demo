@@ -13,6 +13,8 @@ module MySpace.MusicCatalogue.Statements
     module MySpace.MusicCatalogue.Statements.SelectAlbumById,
     -- ** SelectAlbumByName
     module MySpace.MusicCatalogue.Statements.SelectAlbumByName,
+    -- ** SelectAlbumRows
+    module MySpace.MusicCatalogue.Statements.SelectAlbumRows,
     -- ** SelectAlbumWithFilters
     module MySpace.MusicCatalogue.Statements.SelectAlbumWithFilters,
     -- ** SelectAlbumWithTracks
@@ -31,6 +33,7 @@ import MySpace.MusicCatalogue.Statements.InsertMultipleAlbums
 import MySpace.MusicCatalogue.Statements.SelectAlbumByFormat
 import MySpace.MusicCatalogue.Statements.SelectAlbumById
 import MySpace.MusicCatalogue.Statements.SelectAlbumByName
+import MySpace.MusicCatalogue.Statements.SelectAlbumRows
 import MySpace.MusicCatalogue.Statements.SelectAlbumWithFilters
 import MySpace.MusicCatalogue.Statements.SelectAlbumWithTracks
 import MySpace.MusicCatalogue.Statements.SelectGenreByArtist

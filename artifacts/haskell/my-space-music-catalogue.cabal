@@ -33,11 +33,13 @@ library
     MySpace.MusicCatalogue.Statements.SelectAlbumByFormat
     MySpace.MusicCatalogue.Statements.SelectAlbumById
     MySpace.MusicCatalogue.Statements.SelectAlbumByName
+    MySpace.MusicCatalogue.Statements.SelectAlbumRows
     MySpace.MusicCatalogue.Statements.SelectAlbumWithFilters
     MySpace.MusicCatalogue.Statements.SelectAlbumWithTracks
     MySpace.MusicCatalogue.Statements.SelectGenreByArtist
     MySpace.MusicCatalogue.Statements.UpdateAlbumRecordingReturning
     MySpace.MusicCatalogue.Statements.UpdateAlbumReleased
+    MySpace.MusicCatalogue.Types.Album
     MySpace.MusicCatalogue.Types.AlbumFormat
     MySpace.MusicCatalogue.Types.DiscInfo
     MySpace.MusicCatalogue.Types.RecordingInfo
