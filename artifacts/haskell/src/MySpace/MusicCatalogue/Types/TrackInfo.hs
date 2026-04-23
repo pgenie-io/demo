@@ -13,11 +13,11 @@ import qualified PostgresqlTypes as Pt
 -- Representation of the @track_info@ user-declared PostgreSQL record type.
 data TrackInfo = TrackInfo
   { -- | Maps to @title@.
-    title :: Maybe (Text),
+    title :: Text,
     -- | Maps to @duration_seconds@.
-    durationSeconds :: Maybe (Int32),
+    durationSeconds :: Int32,
     -- | Maps to @tags@.
-    tags :: Maybe (Vector (Maybe Text))
+    tags :: Vector (Text)
   }
   deriving stock (Show, Eq, Ord)
 
@@ -27,9 +27,9 @@ instance IsScalar.IsScalar TrackInfo where
       (Just "public")
       "track_info"
       ( mconcat
-          [ (.title) >$< Encoders.field (Encoders.nullable (IsScalar.encoder)),
-            (.durationSeconds) >$< Encoders.field (Encoders.nullable (IsScalar.encoder)),
-            (.tags) >$< Encoders.field (Encoders.nullable (Encoders.array (Encoders.dimension Vector.foldl' (Encoders.element (Encoders.nullable IsScalar.encoder)))))
+          [ (.title) >$< Encoders.field (Encoders.nonNullable (IsScalar.encoder)),
+            (.durationSeconds) >$< Encoders.field (Encoders.nonNullable (IsScalar.encoder)),
+            (.tags) >$< Encoders.field (Encoders.nonNullable (Encoders.array (Encoders.dimension Vector.foldl' (Encoders.element (Encoders.nonNullable IsScalar.encoder)))))
           ]
       )
   
@@ -38,8 +38,8 @@ instance IsScalar.IsScalar TrackInfo where
       (Just "public")
       "track_info"
       ( TrackInfo
-          <$> Decoders.field (Decoders.nullable (IsScalar.decoder))
-          <*> Decoders.field (Decoders.nullable (IsScalar.decoder))
-          <*> Decoders.field (Decoders.nullable (Decoders.array (Decoders.dimension Vector.replicateM (Decoders.element (Decoders.nullable IsScalar.decoder)))))
+          <$> Decoders.field (Decoders.nonNullable (IsScalar.decoder))
+          <*> Decoders.field (Decoders.nonNullable (IsScalar.decoder))
+          <*> Decoders.field (Decoders.nonNullable (Decoders.array (Decoders.dimension Vector.replicateM (Decoders.element (Decoders.nonNullable IsScalar.decoder)))))
       )
   

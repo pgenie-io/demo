@@ -2,7 +2,6 @@ package io.pgenie.artifacts.myspace.musiccatalogue.types;
 
 import java.time.*;
 import java.util.List;
-import java.util.Optional;
 import io.codemine.java.postgresql.jdbc.Codec;
 
 /**
@@ -20,26 +19,26 @@ public record RecordingInfo(
         /**
          * Maps to {@code studio_name}.
          */
-        Optional<String> studioName,
+        String studioName,
         /**
          * Maps to {@code city}.
          */
-        Optional<String> city,
+        String city,
         /**
          * Maps to {@code country}.
          */
-        Optional<String> country,
+        String country,
         /**
          * Maps to {@code recorded_date}.
          */
-        Optional<LocalDate> recordedDate) {
+        LocalDate recordedDate) {
 
     public static final Codec<RecordingInfo> CODEC = Codec.<RecordingInfo>composite(
             "public", "recording_info",
-            objects -> new RecordingInfo((( Optional<String> ) objects[0]), (( Optional<String> ) objects[1]), (( Optional<String> ) objects[2]), (( Optional<LocalDate> ) objects[3])),
-            Codec.<RecordingInfo, String>field("studio_name", Codec.TEXT, row -> row.studioName().orElse(null)),
-            Codec.<RecordingInfo, String>field("city", Codec.TEXT, row -> row.city().orElse(null)),
-            Codec.<RecordingInfo, String>field("country", Codec.TEXT, row -> row.country().orElse(null)),
-            Codec.<RecordingInfo, LocalDate>field("recorded_date", Codec.DATE, row -> row.recordedDate().orElse(null)));
+            objects -> new RecordingInfo((( String ) objects[0]), (( String ) objects[1]), (( String ) objects[2]), (( LocalDate ) objects[3])),
+            Codec.<RecordingInfo, String>field("studio_name", Codec.TEXT, RecordingInfo::studioName),
+            Codec.<RecordingInfo, String>field("city", Codec.TEXT, RecordingInfo::city),
+            Codec.<RecordingInfo, String>field("country", Codec.TEXT, RecordingInfo::country),
+            Codec.<RecordingInfo, LocalDate>field("recorded_date", Codec.DATE, RecordingInfo::recordedDate));
 
 }

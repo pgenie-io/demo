@@ -23,7 +23,7 @@ public record TrackInfo(
         /**
          * Maps to {@code duration_seconds}.
          */
-        Integer durationSeconds,
+        int durationSeconds,
         /**
          * Maps to {@code tags}.
          */
@@ -31,7 +31,7 @@ public record TrackInfo(
 
     public static final Codec<TrackInfo> CODEC = Codec.<TrackInfo>composite(
             "public", "track_info",
-            objects -> new TrackInfo((( String ) objects[0]), (( Integer ) objects[1]), (( List<String> ) objects[2])),
+            objects -> new TrackInfo((( String ) objects[0]), (( int ) objects[1]), (( List<String> ) objects[2])),
             Codec.<TrackInfo, String>field("title", Codec.TEXT, TrackInfo::title),
             Codec.<TrackInfo, Integer>field("duration_seconds", Codec.INT4, TrackInfo::durationSeconds),
             Codec.<TrackInfo, List<String>>field("tags", Codec.TEXT.inDim(), TrackInfo::tags));

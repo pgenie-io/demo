@@ -1,0 +1,13 @@
+composite:
+  studio_name:
+    type: text
+    not_null: true
+  city:
+    type: text
+    not_null: true
+  country:
+    type: text
+    not_null: true
+  recorded_date:
+    type: date
+    not_null: true

@@ -6,14 +6,14 @@ use postgres_types::{ToSql, FromSql};
 pub struct RecordingInfo {
     /// Maps to `studio_name`.
     #[postgres(name = "studio_name")]
-    pub studio_name: Option<String>,
+    pub studio_name: String,
     /// Maps to `city`.
     #[postgres(name = "city")]
-    pub city: Option<String>,
+    pub city: String,
     /// Maps to `country`.
     #[postgres(name = "country")]
-    pub country: Option<String>,
+    pub country: String,
     /// Maps to `recorded_date`.
     #[postgres(name = "recorded_date")]
-    pub recorded_date: Option<chrono::NaiveDate>,
+    pub recorded_date: chrono::NaiveDate,
 }

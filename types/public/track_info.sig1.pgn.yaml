@@ -1,0 +1,12 @@
+composite:
+  title:
+    type: text
+    not_null: true
+  duration_seconds:
+    type: int4
+    not_null: true
+  tags:
+    type: text
+    not_null: true
+    dims: 1
+    element_not_null: true

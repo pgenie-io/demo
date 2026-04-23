@@ -2,7 +2,6 @@ package io.pgenie.artifacts.myspace.musiccatalogue.types;
 
 import java.time.*;
 import java.util.List;
-import java.util.Optional;
 import io.codemine.java.postgresql.jdbc.Codec;
 
 /**
@@ -20,21 +19,21 @@ public record TrackInfo(
         /**
          * Maps to {@code title}.
          */
-        Optional<String> title,
+        String title,
         /**
          * Maps to {@code duration_seconds}.
          */
-        Optional<Integer> durationSeconds,
+        int durationSeconds,
         /**
          * Maps to {@code tags}.
          */
-        Optional<List<Optional<String>>> tags) {
+        List<String> tags) {
 
     public static final Codec<TrackInfo> CODEC = Codec.<TrackInfo>composite(
             "public", "track_info",
-            objects -> new TrackInfo((( Optional<String> ) objects[0]), (( Optional<Integer> ) objects[1]), (( Optional<List<Optional<String>>> ) objects[2])),
-            Codec.<TrackInfo, String>field("title", Codec.TEXT, row -> row.title().orElse(null)),
-            Codec.<TrackInfo, Integer>field("duration_seconds", Codec.INT4, row -> row.durationSeconds().orElse(null)),
-            Codec.<TrackInfo, List<String>>field("tags", Codec.TEXT.inDim(), row -> row.tags().map(list -> list.stream().map(o -> o.orElse(null)).toList()).orElse(null)));
+            objects -> new TrackInfo((( String ) objects[0]), (( int ) objects[1]), (( List<String> ) objects[2])),
+            Codec.<TrackInfo, String>field("title", Codec.TEXT, TrackInfo::title),
+            Codec.<TrackInfo, Integer>field("duration_seconds", Codec.INT4, TrackInfo::durationSeconds),
+            Codec.<TrackInfo, List<String>>field("tags", Codec.TEXT.inDim(), TrackInfo::tags));
 
 }

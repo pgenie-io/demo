@@ -6,11 +6,11 @@ use postgres_types::{ToSql, FromSql};
 pub struct TrackInfo {
     /// Maps to `title`.
     #[postgres(name = "title")]
-    pub title: Option<String>,
+    pub title: String,
     /// Maps to `duration_seconds`.
     #[postgres(name = "duration_seconds")]
-    pub duration_seconds: Option<i32>,
+    pub duration_seconds: i32,
     /// Maps to `tags`.
     #[postgres(name = "tags")]
-    pub tags: Option<Vec<Option<String>>>,
+    pub tags: Vec<String>,
 }
