@@ -26,6 +26,7 @@ postgres-types = { version = "0.2", features = [
 bit-vec = "0.9"
 cidr = "0.3"
 chrono = { version = "0.4", default-features = false, features = ["std"] }
+deadpool-postgres = "0.14.1"
 eui48 = "1"
 geo-types = "0.7"
 rust_decimal = { version = "1", features = ["db-postgres"] }
