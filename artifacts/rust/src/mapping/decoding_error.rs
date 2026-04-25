@@ -1,5 +1,3 @@
-use tokio_postgres::{types::FromSql, Row};
-
 #[derive(Debug)]
 pub enum DecodingError {
     UnexpectedAmountOfRows {
@@ -37,20 +35,4 @@ impl std::error::Error for DecodingError {
             DecodingError::UnexpectedAmountOfRows { .. } => None,
         }
     }
-}
-
-/// Decode a single result-set cell and attach its row/column location to any
-/// PostgreSQL decoding error.
-pub fn decode_cell<'a, T: FromSql<'a>>(
-    input_row: &'a Row,
-    row_index: usize,
-    column_index: usize,
-) -> Result<T, DecodingError> {
-    input_row
-        .try_get(column_index)
-        .map_err(|source| DecodingError::Cell {
-            row: row_index,
-            column: column_index,
-            source,
-        })
 }

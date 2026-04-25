@@ -32,4 +32,7 @@ artifacts:
 
   java-null: https://raw.githubusercontent.com/pgenie-io/java.gen/v0.4.1/gen/Gen.dhall
 
-  rust: https://raw.githubusercontent.com/pgenie-io/rust.gen/v0.1.2/gen/Gen.dhall
+  rust:
+    gen: https://raw.githubusercontent.com/pgenie-io/rust.gen/v0.2.0/gen/Gen.dhall
+    config:
+      deadpool: false
