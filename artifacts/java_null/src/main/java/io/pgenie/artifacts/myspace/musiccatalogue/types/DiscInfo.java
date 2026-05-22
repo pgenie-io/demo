@@ -27,7 +27,7 @@ public record DiscInfo(
 
     public static final Codec<DiscInfo> CODEC = Codec.<DiscInfo>composite(
             "public", "disc_info",
-            objects -> new DiscInfo((( String ) objects[0]), (( RecordingInfo ) objects[1])),
+            objects -> new DiscInfo((String) objects[0], (RecordingInfo) objects[1]),
             Codec.<DiscInfo, String>field("name", Codec.TEXT, DiscInfo::name),
             Codec.<DiscInfo, RecordingInfo>field("recording", RecordingInfo.CODEC, DiscInfo::recording));
 

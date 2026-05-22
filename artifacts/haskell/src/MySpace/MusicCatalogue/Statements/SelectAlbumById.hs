@@ -48,7 +48,7 @@ data SelectAlbumByIdResultRow = SelectAlbumByIdResultRow
     -- | Maps to @recording@.
     recording :: Maybe (Types.RecordingInfo),
     -- | Maps to @tracks@.
-    tracks :: Maybe (Vector (Maybe Types.TrackInfo)),
+    tracks :: Maybe (Vector (Maybe (Types.TrackInfo))),
     -- | Maps to @disc@.
     disc :: Maybe (Types.DiscInfo)
   }

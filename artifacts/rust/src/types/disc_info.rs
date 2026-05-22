@@ -1,7 +1,7 @@
 use postgres_types::{ToSql, FromSql};
 
 /// Representation of the `disc_info` PostgreSQL composite type.
-#[derive(Debug, Clone, PartialEq, Eq, Default, ToSql, FromSql)]
+#[derive(Debug, Clone, PartialEq, Default, ToSql, FromSql)]
 #[postgres(name = "disc_info")]
 pub struct DiscInfo {
     /// Maps to `name`.

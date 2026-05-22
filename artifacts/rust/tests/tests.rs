@@ -1,13 +1,37 @@
 use std::error::Error;
 
-use my_space_music_catalogue::mapping::Statement;
 use my_space_music_catalogue::statements;
 use testcontainers::runners::AsyncRunner as _;
 
-async fn setup_pool() -> (
-    deadpool_postgres::Pool,
-    testcontainers::ContainerAsync<testcontainers_modules::postgres::Postgres>,
-) {
+struct SharedTestContext {
+    pool: deadpool_postgres::Pool,
+    _container: testcontainers::ContainerAsync<testcontainers_modules::postgres::Postgres>,
+}
+
+static SHARED_TEST_CONTEXT: tokio::sync::OnceCell<std::sync::Mutex<Option<SharedTestContext>>> =
+    tokio::sync::OnceCell::const_new();
+
+#[dtor::dtor(unsafe, method = at_module_exit)]
+fn cleanup_shared_test_context() {
+    if let Some(context) = SHARED_TEST_CONTEXT.get() {
+        if let Some(context) = context.lock().unwrap().take() {
+            std::thread::spawn(move || {
+                let runtime = tokio::runtime::Builder::new_current_thread()
+                    .enable_all()
+                    .build()
+                    .expect("Failed to build cleanup runtime");
+
+                runtime.block_on(async move {
+                    drop(context);
+                });
+            })
+            .join()
+            .expect("Failed to join cleanup thread");
+        }
+    }
+}
+
+async fn setup_pool() -> std::sync::Mutex<Option<SharedTestContext>> {
     let container = testcontainers_modules::postgres::Postgres::default()
         .start()
         .await
@@ -19,6 +43,9 @@ async fn setup_pool() -> (
         .expect("Failed to get host port");
 
     let mut cfg = deadpool_postgres::Config::new();
+    cfg.manager = Some(deadpool_postgres::ManagerConfig {
+        recycling_method: deadpool_postgres::RecyclingMethod::Verified,
+    });
     cfg.host = Some("127.0.0.1".to_string());
     cfg.port = Some(host_port);
     cfg.user = Some("postgres".to_string());
@@ -34,7 +61,22 @@ async fn setup_pool() -> (
 
     apply_migrations(host_port).await;
 
-    (pool, container)
+    std::sync::Mutex::new(Some(SharedTestContext {
+        pool,
+        _container: container,
+    }))
+}
+
+async fn shared_pool() -> deadpool_postgres::Pool {
+    SHARED_TEST_CONTEXT
+        .get_or_init(setup_pool)
+        .await
+        .lock()
+        .unwrap()
+        .as_ref()
+        .expect("Shared test context should be initialized")
+        .pool
+        .clone()
 }
 
 async fn apply_migrations(host_port: u16) {
@@ -107,28 +149,173 @@ async fn execute_preparing<S: my_space_music_catalogue::mapping::Statement>(
     }
 }
 
-async fn assert_statement_executes<S>(pool: &deadpool_postgres::Pool, stmt_name: &str)
-where
-    S: Statement + Default,
-{
-    let statement = S::default();
-    execute_preparing(pool, &statement)
-        .await
-        .unwrap_or_else(|e| panic!("Statement {stmt_name} should execute successfully: {e}"));
+#[tokio::test]
+async fn insert_album_executes_with_realistic_values() {
+    let pool = shared_pool().await;
+    execute_preparing(
+        &pool,
+        &statements::insert_album::Input {
+            name: "hello world".to_string(),
+            released: chrono::NaiveDate::from_ymd_opt(2024, 1, 15).unwrap(),
+            format: Default::default(),
+            recording: Default::default(),
+        }
+    )
+    .await
+    .unwrap_or_else(|e| panic!("Statement should execute successfully: {e}"));
 }
 
+
 #[tokio::test]
-async fn all_declared_statements_execute_with_default_values() {
-    let (pool, _container) = setup_pool().await;
-    assert_statement_executes::<statements::insert_album::Input>(&pool, "insert_album").await;
-    assert_statement_executes::<statements::insert_multiple_albums::Input>(&pool, "insert_multiple_albums").await;
-    assert_statement_executes::<statements::select_album_by_format::Input>(&pool, "select_album_by_format").await;
-    assert_statement_executes::<statements::select_album_by_id::Input>(&pool, "select_album_by_id").await;
-    assert_statement_executes::<statements::select_album_by_name::Input>(&pool, "select_album_by_name").await;
-    assert_statement_executes::<statements::select_album_rows::Input>(&pool, "select_album_rows").await;
-    assert_statement_executes::<statements::select_album_with_filters::Input>(&pool, "select_album_with_filters").await;
-    assert_statement_executes::<statements::select_album_with_tracks::Input>(&pool, "select_album_with_tracks").await;
-    assert_statement_executes::<statements::select_genre_by_artist::Input>(&pool, "select_genre_by_artist").await;
-    assert_statement_executes::<statements::update_album_recording_returning::Input>(&pool, "update_album_recording_returning").await;
-    assert_statement_executes::<statements::update_album_released::Input>(&pool, "update_album_released").await;
+async fn insert_multiple_albums_executes_with_realistic_values() {
+    let pool = shared_pool().await;
+    execute_preparing(
+        &pool,
+        &statements::insert_multiple_albums::Input {
+            name: vec!["hello world".to_string()],
+            released: vec![chrono::NaiveDate::from_ymd_opt(2024, 1, 15).unwrap()],
+            format: vec![Default::default()],
+        }
+    )
+    .await
+    .unwrap_or_else(|e| panic!("Statement should execute successfully: {e}"));
 }
+
+
+#[tokio::test]
+async fn select_album_by_format_executes_with_realistic_values() {
+    let pool = shared_pool().await;
+    execute_preparing(
+        &pool,
+        &statements::select_album_by_format::Input {
+            format: Default::default(),
+        }
+    )
+    .await
+    .unwrap_or_else(|e| panic!("Statement should execute successfully: {e}"));
+}
+
+
+#[tokio::test]
+async fn select_album_by_id_executes_with_realistic_values() {
+    let pool = shared_pool().await;
+    execute_preparing(
+        &pool,
+        &statements::select_album_by_id::Input {
+            id: Some(42i64),
+        }
+    )
+    .await
+    .unwrap_or_else(|e| panic!("Statement should execute successfully: {e}"));
+}
+
+
+#[tokio::test]
+async fn select_album_by_name_executes_with_realistic_values() {
+    let pool = shared_pool().await;
+    execute_preparing(
+        &pool,
+        &statements::select_album_by_name::Input {
+            name: "hello world".to_string(),
+        }
+    )
+    .await
+    .unwrap_or_else(|e| panic!("Statement should execute successfully: {e}"));
+}
+
+
+#[tokio::test]
+async fn select_album_rows_executes_with_realistic_values() {
+    let pool = shared_pool().await;
+    execute_preparing(
+        &pool,
+        &statements::select_album_rows::Input::default()
+    )
+    .await
+    .unwrap_or_else(|e| panic!("Statement should execute successfully: {e}"));
+}
+
+
+#[tokio::test]
+async fn select_album_with_filters_executes_with_realistic_values() {
+    let pool = shared_pool().await;
+    execute_preparing(
+        &pool,
+        &statements::select_album_with_filters::Input {
+            include_name: true,
+            include_released: true,
+            include_format: true,
+            include_recording: true,
+            include_tracks: true,
+            include_disc: true,
+            artist_name: Some("hello world".to_string()),
+            genre_name: Some("hello world".to_string()),
+            format: Some(Default::default()),
+            released_after: Some(chrono::NaiveDateTime::new(chrono::NaiveDate::from_ymd_opt(2024, 1, 15).unwrap(), chrono::NaiveTime::from_hms_opt(12, 30, 45).unwrap())),
+            name_like: Some("hello world".to_string()),
+            order_by_name: true,
+            order_by_released: true,
+        }
+    )
+    .await
+    .unwrap_or_else(|e| panic!("Statement should execute successfully: {e}"));
+}
+
+
+#[tokio::test]
+async fn select_album_with_tracks_executes_with_realistic_values() {
+    let pool = shared_pool().await;
+    execute_preparing(
+        &pool,
+        &statements::select_album_with_tracks::Input {
+            id: 42i64,
+        }
+    )
+    .await
+    .unwrap_or_else(|e| panic!("Statement should execute successfully: {e}"));
+}
+
+
+#[tokio::test]
+async fn select_genre_by_artist_executes_with_realistic_values() {
+    let pool = shared_pool().await;
+    execute_preparing(
+        &pool,
+        &statements::select_genre_by_artist::Input {
+            artist: 42i32,
+        }
+    )
+    .await
+    .unwrap_or_else(|e| panic!("Statement should execute successfully: {e}"));
+}
+
+
+#[tokio::test]
+async fn update_album_recording_returning_executes_with_realistic_values() {
+    let pool = shared_pool().await;
+    execute_preparing(
+        &pool,
+        &statements::update_album_recording_returning::Input {
+            recording: Some(Default::default()),
+            id: 42i64,
+        }
+    )
+    .await
+    .unwrap_or_else(|e| panic!("Statement should execute successfully: {e}"));
+}
+
+
+#[tokio::test]
+async fn update_album_released_executes_with_realistic_values() {
+    let pool = shared_pool().await;
+    execute_preparing(
+        &pool,
+        &statements::update_album_released::Input {
+            released: Some(chrono::NaiveDate::from_ymd_opt(2024, 1, 15).unwrap()),
+            id: 42i64,
+        }
+    )
+    .await
+    .unwrap_or_else(|e| panic!("Statement should execute successfully: {e}"));
+}
+

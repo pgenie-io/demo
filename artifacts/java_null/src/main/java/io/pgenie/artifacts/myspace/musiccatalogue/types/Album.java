@@ -47,7 +47,7 @@ public record Album(
 
     public static final Codec<Album> CODEC = Codec.<Album>composite(
             "public", "album",
-            objects -> new Album((( Long ) objects[0]), (( String ) objects[1]), (( LocalDate ) objects[2]), (( AlbumFormat ) objects[3]), (( RecordingInfo ) objects[4]), (( List<TrackInfo> ) objects[5]), (( DiscInfo ) objects[6])),
+            objects -> new Album((Long) objects[0], (String) objects[1], (LocalDate) objects[2], (AlbumFormat) objects[3], (RecordingInfo) objects[4], (List<TrackInfo>) objects[5], (DiscInfo) objects[6]),
             Codec.<Album, Long>field("id", Codec.INT8, Album::id),
             Codec.<Album, String>field("name", Codec.TEXT, Album::name),
             Codec.<Album, LocalDate>field("released", Codec.DATE, Album::released),

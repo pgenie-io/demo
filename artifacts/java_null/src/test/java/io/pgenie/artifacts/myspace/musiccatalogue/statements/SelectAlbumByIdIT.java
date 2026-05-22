@@ -3,6 +3,8 @@ package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.pgenie.artifacts.myspace.musiccatalogue.AbstractDatabaseIT;
+import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
+import io.codemine.java.postgresql.jdbc.Codec;
 import io.codemine.java.postgresql.codecs.*;
 import java.util.List;
 import java.sql.SQLException;
@@ -14,7 +16,7 @@ class SelectAlbumByIdIT extends AbstractDatabaseIT {
 
     @Test
     void executesWithDefaultValues() throws SQLException {
-        var result = execute(new SelectAlbumById(null));
+        var result = execute(new SelectAlbumById(0L));
         assertNull(result);
 
     }

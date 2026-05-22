@@ -51,3 +51,4 @@ impl crate::mapping::Statement for Input {
         Ok(affected_rows)
     }
 }
+

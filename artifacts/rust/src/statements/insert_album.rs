@@ -13,7 +13,7 @@ use tokio_postgres::types::Type;
 /// # Source Path
 ///
 /// `./queries/insert_album.sql`
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Input {
     /// Maps to `$name` in the template.
     pub name: String,
@@ -34,7 +34,6 @@ pub struct OutputRow {
     /// Maps to the `id` result set column.
     pub id: i64,
 }
-
 
 impl crate::mapping::Statement for Input {
     type Result = Output;

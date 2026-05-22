@@ -24,7 +24,6 @@ pub struct OutputRow {
     pub album: Option<crate::types::Album>,
 }
 
-
 impl crate::mapping::Statement for Input {
     type Result = Output;
 

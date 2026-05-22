@@ -3,6 +3,8 @@ package io.pgenie.artifacts.myspace.musiccatalogue.statements;
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.pgenie.artifacts.myspace.musiccatalogue.AbstractDatabaseIT;
+import io.pgenie.artifacts.myspace.musiccatalogue.types.*;
+import io.codemine.java.postgresql.jdbc.Codec;
 import io.codemine.java.postgresql.codecs.*;
 import java.util.List;
 import java.sql.SQLException;
@@ -14,7 +16,7 @@ class UpdateAlbumReleasedIT extends AbstractDatabaseIT {
 
     @Test
     void executesWithDefaultValues() throws SQLException {
-        var result = execute(new UpdateAlbumReleased(null, 0L));
+        var result = execute(new UpdateAlbumReleased(LocalDate.of(2000, 1, 1), 0L));
         assertTrue(result >= 0L);
 
     }

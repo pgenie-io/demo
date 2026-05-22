@@ -28,7 +28,7 @@ public record DiscInfo(
 
     public static final Codec<DiscInfo> CODEC = Codec.<DiscInfo>composite(
             "public", "disc_info",
-            objects -> new DiscInfo((( Optional<String> ) objects[0]), (( Optional<RecordingInfo> ) objects[1])),
+            objects -> new DiscInfo(Optional.ofNullable((String) objects[0]), Optional.ofNullable((RecordingInfo) objects[1])),
             Codec.<DiscInfo, String>field("name", Codec.TEXT, row -> row.name().orElse(null)),
             Codec.<DiscInfo, RecordingInfo>field("recording", RecordingInfo.CODEC, row -> row.recording().orElse(null)));
 

@@ -1,7 +1,7 @@
 use postgres_types::{ToSql, FromSql};
 
 /// Representation of the `album` PostgreSQL composite type.
-#[derive(Debug, Clone, PartialEq, Eq, Default, ToSql, FromSql)]
+#[derive(Debug, Clone, PartialEq, Default, ToSql, FromSql)]
 #[postgres(name = "album")]
 pub struct Album {
     /// Maps to `id`.

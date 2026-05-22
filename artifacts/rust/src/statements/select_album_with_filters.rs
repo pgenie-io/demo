@@ -88,7 +88,6 @@ pub struct OutputRow {
     pub disc: Option<crate::types::DiscInfo>,
 }
 
-
 impl crate::mapping::Statement for Input {
     type Result = Output;
 

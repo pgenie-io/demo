@@ -42,7 +42,6 @@ pub struct OutputRow {
     pub recording: Option<crate::types::RecordingInfo>,
 }
 
-
 impl crate::mapping::Statement for Input {
     type Result = Output;
 

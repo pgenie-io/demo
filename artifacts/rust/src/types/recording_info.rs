@@ -1,7 +1,7 @@
 use postgres_types::{ToSql, FromSql};
 
 /// Representation of the `recording_info` PostgreSQL composite type.
-#[derive(Debug, Clone, PartialEq, Eq, Default, ToSql, FromSql)]
+#[derive(Debug, Clone, PartialEq, Default, ToSql, FromSql)]
 #[postgres(name = "recording_info")]
 pub struct RecordingInfo {
     /// Maps to `studio_name`.

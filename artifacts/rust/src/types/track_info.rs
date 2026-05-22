@@ -1,7 +1,7 @@
 use postgres_types::{ToSql, FromSql};
 
 /// Representation of the `track_info` PostgreSQL composite type.
-#[derive(Debug, Clone, PartialEq, Eq, Default, ToSql, FromSql)]
+#[derive(Debug, Clone, PartialEq, Default, ToSql, FromSql)]
 #[postgres(name = "track_info")]
 pub struct TrackInfo {
     /// Maps to `title`.

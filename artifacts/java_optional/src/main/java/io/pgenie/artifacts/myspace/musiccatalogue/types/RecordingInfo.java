@@ -35,7 +35,7 @@ public record RecordingInfo(
 
     public static final Codec<RecordingInfo> CODEC = Codec.<RecordingInfo>composite(
             "public", "recording_info",
-            objects -> new RecordingInfo((( String ) objects[0]), (( String ) objects[1]), (( String ) objects[2]), (( LocalDate ) objects[3])),
+            objects -> new RecordingInfo((String) objects[0], (String) objects[1], (String) objects[2], (LocalDate) objects[3]),
             Codec.<RecordingInfo, String>field("studio_name", Codec.TEXT, RecordingInfo::studioName),
             Codec.<RecordingInfo, String>field("city", Codec.TEXT, RecordingInfo::city),
             Codec.<RecordingInfo, String>field("country", Codec.TEXT, RecordingInfo::country),

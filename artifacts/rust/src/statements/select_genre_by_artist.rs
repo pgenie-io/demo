@@ -33,7 +33,6 @@ pub struct OutputRow {
     pub name: String,
 }
 
-
 impl crate::mapping::Statement for Input {
     type Result = Output;
 

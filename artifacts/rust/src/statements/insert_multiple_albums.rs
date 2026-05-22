@@ -40,7 +40,6 @@ pub struct OutputRow {
     pub id: i64,
 }
 
-
 impl crate::mapping::Statement for Input {
     type Result = Output;
 

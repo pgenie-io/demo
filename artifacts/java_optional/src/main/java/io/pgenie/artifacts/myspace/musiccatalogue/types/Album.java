@@ -48,7 +48,7 @@ public record Album(
 
     public static final Codec<Album> CODEC = Codec.<Album>composite(
             "public", "album",
-            objects -> new Album((( Optional<Long> ) objects[0]), (( Optional<String> ) objects[1]), (( Optional<LocalDate> ) objects[2]), (( Optional<AlbumFormat> ) objects[3]), (( Optional<RecordingInfo> ) objects[4]), (( Optional<List<Optional<TrackInfo>>> ) objects[5]), (( Optional<DiscInfo> ) objects[6])),
+            objects -> new Album(Optional.ofNullable((Long) objects[0]), Optional.ofNullable((String) objects[1]), Optional.ofNullable((LocalDate) objects[2]), Optional.ofNullable((AlbumFormat) objects[3]), Optional.ofNullable((RecordingInfo) objects[4]), Optional.ofNullable((List<TrackInfo>) objects[5]).map(list -> list.stream().map(o -> Optional.ofNullable(o)).toList()), Optional.ofNullable((DiscInfo) objects[6])),
             Codec.<Album, Long>field("id", Codec.INT8, row -> row.id().orElse(null)),
             Codec.<Album, String>field("name", Codec.TEXT, row -> row.name().orElse(null)),
             Codec.<Album, LocalDate>field("released", Codec.DATE, row -> row.released().orElse(null)),

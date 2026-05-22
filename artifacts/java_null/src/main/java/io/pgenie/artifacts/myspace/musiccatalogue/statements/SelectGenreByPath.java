@@ -10,7 +10,6 @@ import java.util.Optional;
 import io.codemine.java.postgresql.jdbc.Codec;
 import io.codemine.java.postgresql.jdbc.Statement;
 import io.codemine.java.postgresql.codecs.*;
-import io.codemine.java.postgresql.codecs.*;
 
 /**
  * Type-safe binding for the {@code select_genre_by_path} query.
