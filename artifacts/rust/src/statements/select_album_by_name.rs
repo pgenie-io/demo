@@ -74,12 +74,13 @@ impl crate::mapping::Statement for Input {
             .map(|(row_index, row)| {
                 Ok(OutputRow {
                     id: crate::mapping::decode_cell(&row, row_index, 0)?,
-                    name: crate::mapping::decode_cell(&row, row_index, 1)?,
-                    released: crate::mapping::decode_cell(&row, row_index, 2)?,
-                    format: crate::mapping::decode_cell(&row, row_index, 3)?,
-                    recording: crate::mapping::decode_cell(&row, row_index, 4)?,
+                            name: crate::mapping::decode_cell(&row, row_index, 1)?,
+                            released: crate::mapping::decode_cell(&row, row_index, 2)?,
+                            format: crate::mapping::decode_cell(&row, row_index, 3)?,
+                            recording: crate::mapping::decode_cell(&row, row_index, 4)?,
                 })
             })
             .collect()
     }
 }
+

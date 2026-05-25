@@ -1,15 +1,26 @@
 module MySpace.MusicCatalogue.Statements.UpdateAlbumReleased where
 
 import MySpace.MusicCatalogue.Prelude
-import qualified Hasql.Statement as Statement
-import qualified Hasql.Decoders as Decoders
-import qualified Hasql.Encoders as Encoders
-import qualified Data.Aeson as Aeson
-import qualified Data.Vector as Vector
-import qualified Hasql.Mapping.IsStatement as IsStatement
-import qualified Hasql.Mapping.IsScalar as IsScalar
-import qualified MySpace.MusicCatalogue.Types as Types
-import qualified PostgresqlTypes as Pt
+import Test.QuickCheck
+import qualified Hasql.Statement
+import qualified Hasql.Decoders
+import qualified Hasql.Encoders
+import qualified Data.Aeson
+import qualified Data.Vector
+import qualified Hasql.Mapping.IsStatement
+import qualified Hasql.Mapping.IsScalar
+import MySpace.MusicCatalogue.Types
+import qualified PostgresqlTypes
+import qualified PostgresqlTypes.Date
+import qualified PostgresqlTypes.Bytea
+import qualified PostgresqlTypes.Numeric
+import qualified PostgresqlTypes.Float4
+import qualified PostgresqlTypes.Float8
+import qualified PostgresqlTypes.Int2
+import qualified PostgresqlTypes.Int4
+import qualified PostgresqlTypes.Int8
+import qualified PostgresqlTypes.Text
+import qualified PostgresqlTypes.Uuid
 
 -- |
 -- Parameters for the @update_album_released@ query.
@@ -26,7 +37,7 @@ import qualified PostgresqlTypes as Pt
 --
 data UpdateAlbumReleased = UpdateAlbumReleased
   { -- | Maps to @released@.
-    released :: Maybe (Pt.Date),
+    released :: Maybe (PostgresqlTypes.Date),
     -- | Maps to @id@.
     id :: Int64
   }
@@ -34,10 +45,16 @@ data UpdateAlbumReleased = UpdateAlbumReleased
 
 type UpdateAlbumReleasedResult = Int
 
-instance IsStatement.IsStatement UpdateAlbumReleased where
+instance Arbitrary UpdateAlbumReleased where
+  arbitrary =
+    UpdateAlbumReleased
+      <$> (liftArbitrary arbitrary)
+      <*> (PostgresqlTypes.Int8.toInt64 <$> arbitrary)
+      
+instance Hasql.Mapping.IsStatement.IsStatement UpdateAlbumReleased where
   type Result UpdateAlbumReleased = UpdateAlbumReleasedResult
 
-  statement = Statement.preparable sql encoder decoder
+  statement = Hasql.Statement.preparable sql encoder decoder
     where
       sql =
         "update album\n\
@@ -46,10 +63,9 @@ instance IsStatement.IsStatement UpdateAlbumReleased where
 
       encoder =
         mconcat
-          [ (.released) >$< Encoders.param (Encoders.nullable (IsScalar.encoder)),
-            (.id) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
+          [ (.released) >$< Hasql.Encoders.param (Hasql.Encoders.nullable (Hasql.Mapping.IsScalar.encoder)),
+            (.id) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder))
           ]
 
       decoder =
-        fromIntegral <$> Decoders.rowsAffected
-
+        fromIntegral <$> Hasql.Decoders.rowsAffected

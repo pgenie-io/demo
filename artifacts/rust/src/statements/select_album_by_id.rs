@@ -73,12 +73,12 @@ impl crate::mapping::Statement for Input {
                 let row = rows.first().unwrap();
                 Ok(Some(OutputRow {
                     id: crate::mapping::decode_cell(row, 0, 0)?,
-                    name: crate::mapping::decode_cell(row, 0, 1)?,
-                    released: crate::mapping::decode_cell(row, 0, 2)?,
-                    format: crate::mapping::decode_cell(row, 0, 3)?,
-                    recording: crate::mapping::decode_cell(row, 0, 4)?,
-                    tracks: crate::mapping::decode_cell(row, 0, 5)?,
-                    disc: crate::mapping::decode_cell(row, 0, 6)?,
+                            name: crate::mapping::decode_cell(row, 0, 1)?,
+                            released: crate::mapping::decode_cell(row, 0, 2)?,
+                            format: crate::mapping::decode_cell(row, 0, 3)?,
+                            recording: crate::mapping::decode_cell(row, 0, 4)?,
+                            tracks: crate::mapping::decode_cell(row, 0, 5)?,
+                            disc: crate::mapping::decode_cell(row, 0, 6)?,
                 }))
             }
             n => Err(crate::mapping::DecodingError::UnexpectedAmountOfRows {
@@ -88,3 +88,4 @@ impl crate::mapping::Statement for Input {
         }
     }
 }
+

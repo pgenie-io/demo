@@ -75,3 +75,4 @@ impl crate::mapping::Statement for Input {
         }
     }
 }
+

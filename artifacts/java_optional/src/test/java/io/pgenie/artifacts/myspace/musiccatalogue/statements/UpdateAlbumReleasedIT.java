@@ -17,7 +17,7 @@ class UpdateAlbumReleasedIT extends AbstractDatabaseIT {
     @Test
     void executesWithDefaultValues() throws SQLException {
         var result = execute(new UpdateAlbumReleased(Optional.empty(), 0L));
-        assertTrue(result >= 0L);
+        assertNotNull(result);
 
     }
 }

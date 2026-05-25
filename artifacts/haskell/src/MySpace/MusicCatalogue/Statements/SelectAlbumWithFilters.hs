@@ -1,15 +1,26 @@
 module MySpace.MusicCatalogue.Statements.SelectAlbumWithFilters where
 
 import MySpace.MusicCatalogue.Prelude
-import qualified Hasql.Statement as Statement
-import qualified Hasql.Decoders as Decoders
-import qualified Hasql.Encoders as Encoders
-import qualified Data.Aeson as Aeson
-import qualified Data.Vector as Vector
-import qualified Hasql.Mapping.IsStatement as IsStatement
-import qualified Hasql.Mapping.IsScalar as IsScalar
-import qualified MySpace.MusicCatalogue.Types as Types
-import qualified PostgresqlTypes as Pt
+import Test.QuickCheck
+import qualified Hasql.Statement
+import qualified Hasql.Decoders
+import qualified Hasql.Encoders
+import qualified Data.Aeson
+import qualified Data.Vector
+import qualified Hasql.Mapping.IsStatement
+import qualified Hasql.Mapping.IsScalar
+import MySpace.MusicCatalogue.Types
+import qualified PostgresqlTypes
+import qualified PostgresqlTypes.Date
+import qualified PostgresqlTypes.Bytea
+import qualified PostgresqlTypes.Numeric
+import qualified PostgresqlTypes.Float4
+import qualified PostgresqlTypes.Float8
+import qualified PostgresqlTypes.Int2
+import qualified PostgresqlTypes.Int4
+import qualified PostgresqlTypes.Int8
+import qualified PostgresqlTypes.Text
+import qualified PostgresqlTypes.Uuid
 
 -- |
 -- Parameters for the @select_album_with_filters@ query.
@@ -65,9 +76,9 @@ data SelectAlbumWithFilters = SelectAlbumWithFilters
     -- | Maps to @genre_name@.
     genreName :: Maybe (Text),
     -- | Maps to @format@.
-    format :: Maybe (Types.AlbumFormat),
+    format :: Maybe (AlbumFormat),
     -- | Maps to @released_after@.
-    releasedAfter :: Maybe (Pt.Timestamp),
+    releasedAfter :: Maybe (PostgresqlTypes.Timestamp),
     -- | Maps to @name_like@.
     nameLike :: Maybe (Text),
     -- | Maps to @order_by_name@.
@@ -78,7 +89,7 @@ data SelectAlbumWithFilters = SelectAlbumWithFilters
   deriving stock (Eq, Show)
 
 -- | Result of the statement parameterised by 'SelectAlbumWithFilters'.
-type SelectAlbumWithFiltersResult = Vector.Vector SelectAlbumWithFiltersResultRow
+type SelectAlbumWithFiltersResult = Data.Vector.Vector SelectAlbumWithFiltersResultRow
 
 -- | Row of 'SelectAlbumWithFiltersResult'.
 data SelectAlbumWithFiltersResultRow = SelectAlbumWithFiltersResultRow
@@ -87,22 +98,39 @@ data SelectAlbumWithFiltersResultRow = SelectAlbumWithFiltersResultRow
     -- | Maps to @name@.
     name :: Maybe (Text),
     -- | Maps to @released@.
-    released :: Maybe (Pt.Date),
+    released :: Maybe (PostgresqlTypes.Date),
     -- | Maps to @format@.
-    format :: Maybe (Types.AlbumFormat),
+    format :: Maybe (AlbumFormat),
     -- | Maps to @recording@.
-    recording :: Maybe (Types.RecordingInfo),
+    recording :: Maybe (RecordingInfo),
     -- | Maps to @tracks@.
-    tracks :: Maybe (Vector (Types.TrackInfo)),
+    tracks :: Maybe (Vector (TrackInfo)),
     -- | Maps to @disc@.
-    disc :: Maybe (Types.DiscInfo)
+    disc :: Maybe (DiscInfo)
   }
   deriving stock (Show, Eq)
 
-instance IsStatement.IsStatement SelectAlbumWithFilters where
+instance Arbitrary SelectAlbumWithFilters where
+  arbitrary =
+    SelectAlbumWithFilters
+      <$> arbitrary
+      <*> arbitrary
+      <*> arbitrary
+      <*> arbitrary
+      <*> arbitrary
+      <*> arbitrary
+      <*> (liftArbitrary (PostgresqlTypes.Text.toText <$> arbitrary))
+      <*> (liftArbitrary (PostgresqlTypes.Text.toText <$> arbitrary))
+      <*> (liftArbitrary arbitrary)
+      <*> (liftArbitrary arbitrary)
+      <*> (liftArbitrary (PostgresqlTypes.Text.toText <$> arbitrary))
+      <*> arbitrary
+      <*> arbitrary
+      
+instance Hasql.Mapping.IsStatement.IsStatement SelectAlbumWithFilters where
   type Result SelectAlbumWithFilters = SelectAlbumWithFiltersResult
 
-  statement = Statement.preparable sql encoder decoder
+  statement = Hasql.Statement.preparable sql encoder decoder
     where
       sql =
         "-- Demonstrates static query equivalent of dynamic field selection.\n\
@@ -134,29 +162,28 @@ instance IsStatement.IsStatement SelectAlbumWithFilters where
 
       encoder =
         mconcat
-          [ (.includeName) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder)),
-            (.includeReleased) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder)),
-            (.includeFormat) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder)),
-            (.includeRecording) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder)),
-            (.includeTracks) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder)),
-            (.includeDisc) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder)),
-            (.artistName) >$< Encoders.param (Encoders.nullable (IsScalar.encoder)),
-            (.genreName) >$< Encoders.param (Encoders.nullable (IsScalar.encoder)),
-            (.format) >$< Encoders.param (Encoders.nullable (IsScalar.encoder)),
-            (.releasedAfter) >$< Encoders.param (Encoders.nullable (IsScalar.encoder)),
-            (.nameLike) >$< Encoders.param (Encoders.nullable (IsScalar.encoder)),
-            (.orderByName) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder)),
-            (.orderByReleased) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
+          [ (.includeName) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder)),
+            (.includeReleased) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder)),
+            (.includeFormat) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder)),
+            (.includeRecording) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder)),
+            (.includeTracks) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder)),
+            (.includeDisc) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder)),
+            (.artistName) >$< Hasql.Encoders.param (Hasql.Encoders.nullable (Hasql.Mapping.IsScalar.encoder)),
+            (.genreName) >$< Hasql.Encoders.param (Hasql.Encoders.nullable (Hasql.Mapping.IsScalar.encoder)),
+            (.format) >$< Hasql.Encoders.param (Hasql.Encoders.nullable (Hasql.Mapping.IsScalar.encoder)),
+            (.releasedAfter) >$< Hasql.Encoders.param (Hasql.Encoders.nullable (Hasql.Mapping.IsScalar.encoder)),
+            (.nameLike) >$< Hasql.Encoders.param (Hasql.Encoders.nullable (Hasql.Mapping.IsScalar.encoder)),
+            (.orderByName) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder)),
+            (.orderByReleased) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder))
           ]
 
       decoder =
-        Decoders.rowVector do
-          id <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
-          name <- Decoders.column (Decoders.nullable (IsScalar.decoder))
-          released <- Decoders.column (Decoders.nullable (IsScalar.decoder))
-          format <- Decoders.column (Decoders.nullable (IsScalar.decoder))
-          recording <- Decoders.column (Decoders.nullable (IsScalar.decoder))
-          tracks <- Decoders.column (Decoders.nullable (Decoders.array (Decoders.dimension Vector.replicateM (Decoders.element (Decoders.nonNullable IsScalar.decoder)))))
-          disc <- Decoders.column (Decoders.nullable (IsScalar.decoder))
+        Hasql.Decoders.rowVector do
+          id <- Hasql.Decoders.column (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
+          name <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
+          released <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
+          format <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
+          recording <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
+          tracks <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Decoders.array (Hasql.Decoders.dimension Data.Vector.replicateM (Hasql.Decoders.element (Hasql.Decoders.nonNullable Hasql.Mapping.IsScalar.decoder)))))
+          disc <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
           pure SelectAlbumWithFiltersResultRow {..}
-

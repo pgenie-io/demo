@@ -54,8 +54,50 @@ library
     hasql-mapping ^>=0.1,
     hasql-postgresql-types >=0.2 && <0.3,
     postgresql-types >=0.1 && <0.2,
+    QuickCheck >=2.14 && <3,
+    quickcheck-instances ^>=0.4,
     scientific >=0.3 && <0.4,
     text >=1.2 && <3,
     time >=1.9 && <2,
     uuid >=1.2 && <2,
     vector >=0.12 && <0.14,
+
+test-suite generated-integration-tests
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is: Main.hs
+  ghc-options: -threaded
+
+  default-language: Haskell2010
+
+  default-extensions:
+    BlockArguments, OverloadedStrings, ScopedTypeVariables
+
+  other-modules:
+    MySpace.MusicCatalogue.StatementsSpec
+    MySpace.MusicCatalogue.Statements.InsertAlbumSpec
+    MySpace.MusicCatalogue.Statements.InsertMultipleAlbumsSpec
+    MySpace.MusicCatalogue.Statements.SelectAlbumByFormatSpec
+    MySpace.MusicCatalogue.Statements.SelectAlbumByIdSpec
+    MySpace.MusicCatalogue.Statements.SelectAlbumByNameSpec
+    MySpace.MusicCatalogue.Statements.SelectAlbumRowsSpec
+    MySpace.MusicCatalogue.Statements.SelectAlbumWithFiltersSpec
+    MySpace.MusicCatalogue.Statements.SelectAlbumWithTracksSpec
+    MySpace.MusicCatalogue.Statements.SelectGenreByArtistSpec
+    MySpace.MusicCatalogue.Statements.UpdateAlbumRecordingReturningSpec
+    MySpace.MusicCatalogue.Statements.UpdateAlbumReleasedSpec
+
+  build-depends:
+    base >=4.14 && <5,
+    bytestring >=0.10 && <0.13,
+    hasql ^>=1.10.3,
+    hasql-pool ^>=1.4,
+    hasql-mapping ^>=0.1,
+    hspec >=2.11 && <3,
+    QuickCheck >=2.14 && <3,
+    quickcheck-instances ^>=0.4,
+    testcontainers-postgresql ^>=0.2.0.1,
+    text >=1.2 && <3,
+    uuid >=1.2 && <2,
+      vector >=0.12 && <0.14,
+    my-space-music-catalogue,

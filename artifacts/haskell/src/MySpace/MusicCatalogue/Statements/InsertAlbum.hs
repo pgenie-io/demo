@@ -1,15 +1,26 @@
 module MySpace.MusicCatalogue.Statements.InsertAlbum where
 
 import MySpace.MusicCatalogue.Prelude
-import qualified Hasql.Statement as Statement
-import qualified Hasql.Decoders as Decoders
-import qualified Hasql.Encoders as Encoders
-import qualified Data.Aeson as Aeson
-import qualified Data.Vector as Vector
-import qualified Hasql.Mapping.IsStatement as IsStatement
-import qualified Hasql.Mapping.IsScalar as IsScalar
-import qualified MySpace.MusicCatalogue.Types as Types
-import qualified PostgresqlTypes as Pt
+import Test.QuickCheck
+import qualified Hasql.Statement
+import qualified Hasql.Decoders
+import qualified Hasql.Encoders
+import qualified Data.Aeson
+import qualified Data.Vector
+import qualified Hasql.Mapping.IsStatement
+import qualified Hasql.Mapping.IsScalar
+import MySpace.MusicCatalogue.Types
+import qualified PostgresqlTypes
+import qualified PostgresqlTypes.Date
+import qualified PostgresqlTypes.Bytea
+import qualified PostgresqlTypes.Numeric
+import qualified PostgresqlTypes.Float4
+import qualified PostgresqlTypes.Float8
+import qualified PostgresqlTypes.Int2
+import qualified PostgresqlTypes.Int4
+import qualified PostgresqlTypes.Int8
+import qualified PostgresqlTypes.Text
+import qualified PostgresqlTypes.Uuid
 
 -- |
 -- Parameters for the @insert_album@ query.
@@ -28,11 +39,11 @@ data InsertAlbum = InsertAlbum
   { -- | Maps to @name@.
     name :: Text,
     -- | Maps to @released@.
-    released :: Pt.Date,
+    released :: PostgresqlTypes.Date,
     -- | Maps to @format@.
-    format :: Types.AlbumFormat,
+    format :: AlbumFormat,
     -- | Maps to @recording@.
-    recording :: Types.RecordingInfo
+    recording :: RecordingInfo
   }
   deriving stock (Eq, Show)
 
@@ -46,10 +57,18 @@ newtype InsertAlbumResultRow = InsertAlbumResultRow
   }
   deriving stock (Show, Eq)
 
-instance IsStatement.IsStatement InsertAlbum where
+instance Arbitrary InsertAlbum where
+  arbitrary =
+    InsertAlbum
+      <$> (PostgresqlTypes.Text.toText <$> arbitrary)
+      <*> arbitrary
+      <*> arbitrary
+      <*> arbitrary
+      
+instance Hasql.Mapping.IsStatement.IsStatement InsertAlbum where
   type Result InsertAlbum = InsertAlbumResult
 
-  statement = Statement.preparable sql encoder decoder
+  statement = Hasql.Statement.preparable sql encoder decoder
     where
       sql =
         "insert into album (name, released, format, recording)\n\
@@ -58,14 +77,13 @@ instance IsStatement.IsStatement InsertAlbum where
 
       encoder =
         mconcat
-          [ (.name) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder)),
-            (.released) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder)),
-            (.format) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder)),
-            (.recording) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
+          [ (.name) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder)),
+            (.released) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder)),
+            (.format) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder)),
+            (.recording) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder))
           ]
 
       decoder =
-        Decoders.singleRow do
-          id <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+        Hasql.Decoders.singleRow do
+          id <- Hasql.Decoders.column (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
           pure InsertAlbumResultRow {..}
-

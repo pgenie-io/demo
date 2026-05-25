@@ -1,15 +1,26 @@
 module MySpace.MusicCatalogue.Statements.UpdateAlbumRecordingReturning where
 
 import MySpace.MusicCatalogue.Prelude
-import qualified Hasql.Statement as Statement
-import qualified Hasql.Decoders as Decoders
-import qualified Hasql.Encoders as Encoders
-import qualified Data.Aeson as Aeson
-import qualified Data.Vector as Vector
-import qualified Hasql.Mapping.IsStatement as IsStatement
-import qualified Hasql.Mapping.IsScalar as IsScalar
-import qualified MySpace.MusicCatalogue.Types as Types
-import qualified PostgresqlTypes as Pt
+import Test.QuickCheck
+import qualified Hasql.Statement
+import qualified Hasql.Decoders
+import qualified Hasql.Encoders
+import qualified Data.Aeson
+import qualified Data.Vector
+import qualified Hasql.Mapping.IsStatement
+import qualified Hasql.Mapping.IsScalar
+import MySpace.MusicCatalogue.Types
+import qualified PostgresqlTypes
+import qualified PostgresqlTypes.Date
+import qualified PostgresqlTypes.Bytea
+import qualified PostgresqlTypes.Numeric
+import qualified PostgresqlTypes.Float4
+import qualified PostgresqlTypes.Float8
+import qualified PostgresqlTypes.Int2
+import qualified PostgresqlTypes.Int4
+import qualified PostgresqlTypes.Int8
+import qualified PostgresqlTypes.Text
+import qualified PostgresqlTypes.Uuid
 
 -- |
 -- Parameters for the @update_album_recording_returning@ query.
@@ -28,14 +39,14 @@ import qualified PostgresqlTypes as Pt
 --
 data UpdateAlbumRecordingReturning = UpdateAlbumRecordingReturning
   { -- | Maps to @recording@.
-    recording :: Maybe (Types.RecordingInfo),
+    recording :: Maybe (RecordingInfo),
     -- | Maps to @id@.
     id :: Int64
   }
   deriving stock (Eq, Show)
 
 -- | Result of the statement parameterised by 'UpdateAlbumRecordingReturning'.
-type UpdateAlbumRecordingReturningResult = Vector.Vector UpdateAlbumRecordingReturningResultRow
+type UpdateAlbumRecordingReturningResult = Data.Vector.Vector UpdateAlbumRecordingReturningResultRow
 
 -- | Row of 'UpdateAlbumRecordingReturningResult'.
 data UpdateAlbumRecordingReturningResultRow = UpdateAlbumRecordingReturningResultRow
@@ -44,22 +55,28 @@ data UpdateAlbumRecordingReturningResultRow = UpdateAlbumRecordingReturningResul
     -- | Maps to @name@.
     name :: Text,
     -- | Maps to @released@.
-    released :: Maybe (Pt.Date),
+    released :: Maybe (PostgresqlTypes.Date),
     -- | Maps to @format@.
-    format :: Maybe (Types.AlbumFormat),
+    format :: Maybe (AlbumFormat),
     -- | Maps to @recording@.
-    recording :: Maybe (Types.RecordingInfo),
+    recording :: Maybe (RecordingInfo),
     -- | Maps to @tracks@.
-    tracks :: Maybe (Vector (Types.TrackInfo)),
+    tracks :: Maybe (Vector (TrackInfo)),
     -- | Maps to @disc@.
-    disc :: Maybe (Types.DiscInfo)
+    disc :: Maybe (DiscInfo)
   }
   deriving stock (Show, Eq)
 
-instance IsStatement.IsStatement UpdateAlbumRecordingReturning where
+instance Arbitrary UpdateAlbumRecordingReturning where
+  arbitrary =
+    UpdateAlbumRecordingReturning
+      <$> (liftArbitrary arbitrary)
+      <*> (PostgresqlTypes.Int8.toInt64 <$> arbitrary)
+      
+instance Hasql.Mapping.IsStatement.IsStatement UpdateAlbumRecordingReturning where
   type Result UpdateAlbumRecordingReturning = UpdateAlbumRecordingReturningResult
 
-  statement = Statement.preparable sql encoder decoder
+  statement = Hasql.Statement.preparable sql encoder decoder
     where
       sql =
         "-- Update album recording information\n\
@@ -70,18 +87,17 @@ instance IsStatement.IsStatement UpdateAlbumRecordingReturning where
 
       encoder =
         mconcat
-          [ (.recording) >$< Encoders.param (Encoders.nullable (IsScalar.encoder)),
-            (.id) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
+          [ (.recording) >$< Hasql.Encoders.param (Hasql.Encoders.nullable (Hasql.Mapping.IsScalar.encoder)),
+            (.id) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder))
           ]
 
       decoder =
-        Decoders.rowVector do
-          id <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
-          name <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
-          released <- Decoders.column (Decoders.nullable (IsScalar.decoder))
-          format <- Decoders.column (Decoders.nullable (IsScalar.decoder))
-          recording <- Decoders.column (Decoders.nullable (IsScalar.decoder))
-          tracks <- Decoders.column (Decoders.nullable (Decoders.array (Decoders.dimension Vector.replicateM (Decoders.element (Decoders.nonNullable IsScalar.decoder)))))
-          disc <- Decoders.column (Decoders.nullable (IsScalar.decoder))
+        Hasql.Decoders.rowVector do
+          id <- Hasql.Decoders.column (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
+          name <- Hasql.Decoders.column (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
+          released <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
+          format <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
+          recording <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
+          tracks <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Decoders.array (Hasql.Decoders.dimension Data.Vector.replicateM (Hasql.Decoders.element (Hasql.Decoders.nonNullable Hasql.Mapping.IsScalar.decoder)))))
+          disc <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
           pure UpdateAlbumRecordingReturningResultRow {..}
-

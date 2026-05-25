@@ -1,15 +1,26 @@
 module MySpace.MusicCatalogue.Statements.SelectAlbumByName where
 
 import MySpace.MusicCatalogue.Prelude
-import qualified Hasql.Statement as Statement
-import qualified Hasql.Decoders as Decoders
-import qualified Hasql.Encoders as Encoders
-import qualified Data.Aeson as Aeson
-import qualified Data.Vector as Vector
-import qualified Hasql.Mapping.IsStatement as IsStatement
-import qualified Hasql.Mapping.IsScalar as IsScalar
-import qualified MySpace.MusicCatalogue.Types as Types
-import qualified PostgresqlTypes as Pt
+import Test.QuickCheck
+import qualified Hasql.Statement
+import qualified Hasql.Decoders
+import qualified Hasql.Encoders
+import qualified Data.Aeson
+import qualified Data.Vector
+import qualified Hasql.Mapping.IsStatement
+import qualified Hasql.Mapping.IsScalar
+import MySpace.MusicCatalogue.Types
+import qualified PostgresqlTypes
+import qualified PostgresqlTypes.Date
+import qualified PostgresqlTypes.Bytea
+import qualified PostgresqlTypes.Numeric
+import qualified PostgresqlTypes.Float4
+import qualified PostgresqlTypes.Float8
+import qualified PostgresqlTypes.Int2
+import qualified PostgresqlTypes.Int4
+import qualified PostgresqlTypes.Int8
+import qualified PostgresqlTypes.Text
+import qualified PostgresqlTypes.Uuid
 
 -- |
 -- Parameters for the @select_album_by_name@ query.
@@ -36,7 +47,7 @@ newtype SelectAlbumByName = SelectAlbumByName
   deriving stock (Eq, Show)
 
 -- | Result of the statement parameterised by 'SelectAlbumByName'.
-type SelectAlbumByNameResult = Vector.Vector SelectAlbumByNameResultRow
+type SelectAlbumByNameResult = Data.Vector.Vector SelectAlbumByNameResultRow
 
 -- | Row of 'SelectAlbumByNameResult'.
 data SelectAlbumByNameResultRow = SelectAlbumByNameResultRow
@@ -45,18 +56,23 @@ data SelectAlbumByNameResultRow = SelectAlbumByNameResultRow
     -- | Maps to @name@.
     name :: Text,
     -- | Maps to @released@.
-    released :: Maybe (Pt.Date),
+    released :: Maybe (PostgresqlTypes.Date),
     -- | Maps to @format@.
-    format :: Maybe (Types.AlbumFormat),
+    format :: Maybe (AlbumFormat),
     -- | Maps to @recording@.
-    recording :: Maybe (Types.RecordingInfo)
+    recording :: Maybe (RecordingInfo)
   }
   deriving stock (Show, Eq)
 
-instance IsStatement.IsStatement SelectAlbumByName where
+instance Arbitrary SelectAlbumByName where
+  arbitrary =
+    SelectAlbumByName
+      <$> (PostgresqlTypes.Text.toText <$> arbitrary)
+      
+instance Hasql.Mapping.IsStatement.IsStatement SelectAlbumByName where
   type Result SelectAlbumByName = SelectAlbumByNameResult
 
-  statement = Statement.preparable sql encoder decoder
+  statement = Hasql.Statement.preparable sql encoder decoder
     where
       sql =
         "select \n\
@@ -70,15 +86,14 @@ instance IsStatement.IsStatement SelectAlbumByName where
 
       encoder =
         mconcat
-          [ (.name) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
+          [ (.name) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder))
           ]
 
       decoder =
-        Decoders.rowVector do
-          id <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
-          name <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
-          released <- Decoders.column (Decoders.nullable (IsScalar.decoder))
-          format <- Decoders.column (Decoders.nullable (IsScalar.decoder))
-          recording <- Decoders.column (Decoders.nullable (IsScalar.decoder))
+        Hasql.Decoders.rowVector do
+          id <- Hasql.Decoders.column (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
+          name <- Hasql.Decoders.column (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
+          released <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
+          format <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
+          recording <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
           pure SelectAlbumByNameResultRow {..}
-

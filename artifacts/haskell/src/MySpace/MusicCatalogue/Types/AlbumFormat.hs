@@ -1,9 +1,12 @@
 module MySpace.MusicCatalogue.Types.AlbumFormat where
 
 import MySpace.MusicCatalogue.Prelude
-import qualified Hasql.Decoders as Decoders
-import qualified Hasql.Encoders as Encoders
-import qualified Hasql.Mapping.IsScalar as IsScalar
+import Test.QuickCheck (Arbitrary (..), elements)
+import Test.QuickCheck.Instances ()
+
+import qualified Hasql.Decoders
+import qualified Hasql.Encoders
+import qualified Hasql.Mapping.IsScalar
 
 -- |
 -- Representation of the @album_format@ user-declared PostgreSQL enumeration type.
@@ -22,9 +25,20 @@ data AlbumFormat
     SacdAlbumFormat
   deriving stock (Show, Eq, Ord, Enum, Bounded)
 
-instance IsScalar.IsScalar AlbumFormat where
+instance Arbitrary AlbumFormat where
+  arbitrary =
+    elements
+      [ VinylAlbumFormat,
+        CdAlbumFormat,
+        CassetteAlbumFormat,
+        DigitalAlbumFormat,
+        DvdAudioAlbumFormat,
+        SacdAlbumFormat
+      ]
+
+instance Hasql.Mapping.IsScalar.IsScalar AlbumFormat where
   encoder =
-    Encoders.enum
+    Hasql.Encoders.enum
       (Just "public")
       "album_format"
       ( \case
@@ -37,7 +51,7 @@ instance IsScalar.IsScalar AlbumFormat where
       )
   
   decoder =
-    Decoders.enum
+    Hasql.Decoders.enum
       (Just "public")
       "album_format"
       ( \case

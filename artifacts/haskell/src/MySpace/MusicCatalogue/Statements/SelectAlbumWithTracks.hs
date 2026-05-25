@@ -1,15 +1,26 @@
 module MySpace.MusicCatalogue.Statements.SelectAlbumWithTracks where
 
 import MySpace.MusicCatalogue.Prelude
-import qualified Hasql.Statement as Statement
-import qualified Hasql.Decoders as Decoders
-import qualified Hasql.Encoders as Encoders
-import qualified Data.Aeson as Aeson
-import qualified Data.Vector as Vector
-import qualified Hasql.Mapping.IsStatement as IsStatement
-import qualified Hasql.Mapping.IsScalar as IsScalar
-import qualified MySpace.MusicCatalogue.Types as Types
-import qualified PostgresqlTypes as Pt
+import Test.QuickCheck
+import qualified Hasql.Statement
+import qualified Hasql.Decoders
+import qualified Hasql.Encoders
+import qualified Data.Aeson
+import qualified Data.Vector
+import qualified Hasql.Mapping.IsStatement
+import qualified Hasql.Mapping.IsScalar
+import MySpace.MusicCatalogue.Types
+import qualified PostgresqlTypes
+import qualified PostgresqlTypes.Date
+import qualified PostgresqlTypes.Bytea
+import qualified PostgresqlTypes.Numeric
+import qualified PostgresqlTypes.Float4
+import qualified PostgresqlTypes.Float8
+import qualified PostgresqlTypes.Int2
+import qualified PostgresqlTypes.Int4
+import qualified PostgresqlTypes.Int8
+import qualified PostgresqlTypes.Text
+import qualified PostgresqlTypes.Uuid
 
 -- |
 -- Parameters for the @select_album_with_tracks@ query.
@@ -31,7 +42,7 @@ newtype SelectAlbumWithTracks = SelectAlbumWithTracks
   deriving stock (Eq, Show)
 
 -- | Result of the statement parameterised by 'SelectAlbumWithTracks'.
-type SelectAlbumWithTracksResult = Vector.Vector SelectAlbumWithTracksResultRow
+type SelectAlbumWithTracksResult = Data.Vector.Vector SelectAlbumWithTracksResultRow
 
 -- | Row of 'SelectAlbumWithTracksResult'.
 data SelectAlbumWithTracksResultRow = SelectAlbumWithTracksResultRow
@@ -40,16 +51,21 @@ data SelectAlbumWithTracksResultRow = SelectAlbumWithTracksResultRow
     -- | Maps to @name@.
     name :: Text,
     -- | Maps to @tracks@.
-    tracks :: Vector (Types.TrackInfo),
+    tracks :: Vector (TrackInfo),
     -- | Maps to @disc@.
-    disc :: Maybe (Types.DiscInfo)
+    disc :: Maybe (DiscInfo)
   }
   deriving stock (Show, Eq)
 
-instance IsStatement.IsStatement SelectAlbumWithTracks where
+instance Arbitrary SelectAlbumWithTracks where
+  arbitrary =
+    SelectAlbumWithTracks
+      <$> (PostgresqlTypes.Int8.toInt64 <$> arbitrary)
+      
+instance Hasql.Mapping.IsStatement.IsStatement SelectAlbumWithTracks where
   type Result SelectAlbumWithTracks = SelectAlbumWithTracksResult
 
-  statement = Statement.preparable sql encoder decoder
+  statement = Hasql.Statement.preparable sql encoder decoder
     where
       sql =
         "select id, name, tracks, disc\n\
@@ -58,14 +74,13 @@ instance IsStatement.IsStatement SelectAlbumWithTracks where
 
       encoder =
         mconcat
-          [ (.id) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
+          [ (.id) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder))
           ]
 
       decoder =
-        Decoders.rowVector do
-          id <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
-          name <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
-          tracks <- Decoders.column (Decoders.nonNullable (Decoders.array (Decoders.dimension Vector.replicateM (Decoders.element (Decoders.nonNullable IsScalar.decoder)))))
-          disc <- Decoders.column (Decoders.nullable (IsScalar.decoder))
+        Hasql.Decoders.rowVector do
+          id <- Hasql.Decoders.column (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
+          name <- Hasql.Decoders.column (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
+          tracks <- Hasql.Decoders.column (Hasql.Decoders.nonNullable (Hasql.Decoders.array (Hasql.Decoders.dimension Data.Vector.replicateM (Hasql.Decoders.element (Hasql.Decoders.nonNullable Hasql.Mapping.IsScalar.decoder)))))
+          disc <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
           pure SelectAlbumWithTracksResultRow {..}
-

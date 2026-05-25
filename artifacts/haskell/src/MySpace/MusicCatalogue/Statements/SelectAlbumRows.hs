@@ -1,15 +1,26 @@
 module MySpace.MusicCatalogue.Statements.SelectAlbumRows where
 
 import MySpace.MusicCatalogue.Prelude
-import qualified Hasql.Statement as Statement
-import qualified Hasql.Decoders as Decoders
-import qualified Hasql.Encoders as Encoders
-import qualified Data.Aeson as Aeson
-import qualified Data.Vector as Vector
-import qualified Hasql.Mapping.IsStatement as IsStatement
-import qualified Hasql.Mapping.IsScalar as IsScalar
-import qualified MySpace.MusicCatalogue.Types as Types
-import qualified PostgresqlTypes as Pt
+import Test.QuickCheck
+import qualified Hasql.Statement
+import qualified Hasql.Decoders
+import qualified Hasql.Encoders
+import qualified Data.Aeson
+import qualified Data.Vector
+import qualified Hasql.Mapping.IsStatement
+import qualified Hasql.Mapping.IsScalar
+import MySpace.MusicCatalogue.Types
+import qualified PostgresqlTypes
+import qualified PostgresqlTypes.Date
+import qualified PostgresqlTypes.Bytea
+import qualified PostgresqlTypes.Numeric
+import qualified PostgresqlTypes.Float4
+import qualified PostgresqlTypes.Float8
+import qualified PostgresqlTypes.Int2
+import qualified PostgresqlTypes.Int4
+import qualified PostgresqlTypes.Int8
+import qualified PostgresqlTypes.Text
+import qualified PostgresqlTypes.Uuid
 
 -- |
 -- Parameters for the @select_album_rows@ query.
@@ -26,19 +37,22 @@ data SelectAlbumRows = SelectAlbumRows
   deriving stock (Eq, Show)
 
 -- | Result of the statement parameterised by 'SelectAlbumRows'.
-type SelectAlbumRowsResult = Vector.Vector SelectAlbumRowsResultRow
+type SelectAlbumRowsResult = Data.Vector.Vector SelectAlbumRowsResultRow
 
 -- | Row of 'SelectAlbumRowsResult'.
 newtype SelectAlbumRowsResultRow = SelectAlbumRowsResultRow
   { -- | Maps to @album@.
-    album :: Maybe (Types.Album)
+    album :: Maybe (Album)
   }
   deriving stock (Show, Eq)
 
-instance IsStatement.IsStatement SelectAlbumRows where
+instance Arbitrary SelectAlbumRows where
+  arbitrary =
+    pure SelectAlbumRows
+instance Hasql.Mapping.IsStatement.IsStatement SelectAlbumRows where
   type Result SelectAlbumRows = SelectAlbumRowsResult
 
-  statement = Statement.preparable sql encoder decoder
+  statement = Hasql.Statement.preparable sql encoder decoder
     where
       sql =
         "select (album.*)::album from album"
@@ -49,7 +63,6 @@ instance IsStatement.IsStatement SelectAlbumRows where
           ]
 
       decoder =
-        Decoders.rowVector do
-          album <- Decoders.column (Decoders.nullable (IsScalar.decoder))
+        Hasql.Decoders.rowVector do
+          album <- Hasql.Decoders.column (Hasql.Decoders.nullable (Hasql.Mapping.IsScalar.decoder))
           pure SelectAlbumRowsResultRow {..}
-

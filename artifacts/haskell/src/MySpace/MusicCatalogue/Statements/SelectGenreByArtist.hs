@@ -1,15 +1,26 @@
 module MySpace.MusicCatalogue.Statements.SelectGenreByArtist where
 
 import MySpace.MusicCatalogue.Prelude
-import qualified Hasql.Statement as Statement
-import qualified Hasql.Decoders as Decoders
-import qualified Hasql.Encoders as Encoders
-import qualified Data.Aeson as Aeson
-import qualified Data.Vector as Vector
-import qualified Hasql.Mapping.IsStatement as IsStatement
-import qualified Hasql.Mapping.IsScalar as IsScalar
-import qualified MySpace.MusicCatalogue.Types as Types
-import qualified PostgresqlTypes as Pt
+import Test.QuickCheck
+import qualified Hasql.Statement
+import qualified Hasql.Decoders
+import qualified Hasql.Encoders
+import qualified Data.Aeson
+import qualified Data.Vector
+import qualified Hasql.Mapping.IsStatement
+import qualified Hasql.Mapping.IsScalar
+import MySpace.MusicCatalogue.Types
+import qualified PostgresqlTypes
+import qualified PostgresqlTypes.Date
+import qualified PostgresqlTypes.Bytea
+import qualified PostgresqlTypes.Numeric
+import qualified PostgresqlTypes.Float4
+import qualified PostgresqlTypes.Float8
+import qualified PostgresqlTypes.Int2
+import qualified PostgresqlTypes.Int4
+import qualified PostgresqlTypes.Int8
+import qualified PostgresqlTypes.Text
+import qualified PostgresqlTypes.Uuid
 
 -- |
 -- Parameters for the @select_genre_by_artist@ query.
@@ -33,7 +44,7 @@ newtype SelectGenreByArtist = SelectGenreByArtist
   deriving stock (Eq, Show)
 
 -- | Result of the statement parameterised by 'SelectGenreByArtist'.
-type SelectGenreByArtistResult = Vector.Vector SelectGenreByArtistResultRow
+type SelectGenreByArtistResult = Data.Vector.Vector SelectGenreByArtistResultRow
 
 -- | Row of 'SelectGenreByArtistResult'.
 data SelectGenreByArtistResultRow = SelectGenreByArtistResultRow
@@ -44,10 +55,15 @@ data SelectGenreByArtistResultRow = SelectGenreByArtistResultRow
   }
   deriving stock (Show, Eq)
 
-instance IsStatement.IsStatement SelectGenreByArtist where
+instance Arbitrary SelectGenreByArtist where
+  arbitrary =
+    SelectGenreByArtist
+      <$> (PostgresqlTypes.Int4.toInt32 <$> arbitrary)
+      
+instance Hasql.Mapping.IsStatement.IsStatement SelectGenreByArtist where
   type Result SelectGenreByArtist = SelectGenreByArtistResult
 
-  statement = Statement.preparable sql encoder decoder
+  statement = Hasql.Statement.preparable sql encoder decoder
     where
       sql =
         "select id, genre.name\n\
@@ -58,12 +74,11 @@ instance IsStatement.IsStatement SelectGenreByArtist where
 
       encoder =
         mconcat
-          [ (.artist) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
+          [ (.artist) >$< Hasql.Encoders.param (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder))
           ]
 
       decoder =
-        Decoders.rowVector do
-          id <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
-          name <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+        Hasql.Decoders.rowVector do
+          id <- Hasql.Decoders.column (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
+          name <- Hasql.Decoders.column (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
           pure SelectGenreByArtistResultRow {..}
-

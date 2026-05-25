@@ -1,12 +1,15 @@
 module MySpace.MusicCatalogue.Types.RecordingInfo where
 
 import MySpace.MusicCatalogue.Prelude
-import qualified Data.Aeson as Aeson
-import qualified Data.Vector as Vector
-import qualified Hasql.Decoders as Decoders
-import qualified Hasql.Encoders as Encoders
-import qualified Hasql.Mapping.IsScalar as IsScalar
-import qualified PostgresqlTypes as Pt
+import Test.QuickCheck (Arbitrary (..))
+import Test.QuickCheck.Instances ()
+
+import qualified Data.Aeson
+import qualified Data.Vector
+import qualified Hasql.Decoders
+import qualified Hasql.Encoders
+import qualified Hasql.Mapping.IsScalar
+import qualified PostgresqlTypes
 
 
 -- |
@@ -19,31 +22,34 @@ data RecordingInfo = RecordingInfo
     -- | Maps to @country@.
     country :: Text,
     -- | Maps to @recorded_date@.
-    recordedDate :: Pt.Date
+    recordedDate :: PostgresqlTypes.Date
   }
   deriving stock (Show, Eq, Ord)
 
-instance IsScalar.IsScalar RecordingInfo where
+instance Arbitrary RecordingInfo where
+  arbitrary =
+    RecordingInfo <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
+
+instance Hasql.Mapping.IsScalar.IsScalar RecordingInfo where
   encoder =
-    Encoders.composite
+    Hasql.Encoders.composite
       (Just "public")
       "recording_info"
       ( mconcat
-          [ (.studioName) >$< Encoders.field (Encoders.nonNullable (IsScalar.encoder)),
-            (.city) >$< Encoders.field (Encoders.nonNullable (IsScalar.encoder)),
-            (.country) >$< Encoders.field (Encoders.nonNullable (IsScalar.encoder)),
-            (.recordedDate) >$< Encoders.field (Encoders.nonNullable (IsScalar.encoder))
+          [ (.studioName) >$< Hasql.Encoders.field (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder)),
+            (.city) >$< Hasql.Encoders.field (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder)),
+            (.country) >$< Hasql.Encoders.field (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder)),
+            (.recordedDate) >$< Hasql.Encoders.field (Hasql.Encoders.nonNullable (Hasql.Mapping.IsScalar.encoder))
           ]
       )
   
   decoder =
-    Decoders.composite
+    Hasql.Decoders.composite
       (Just "public")
       "recording_info"
       ( RecordingInfo
-          <$> Decoders.field (Decoders.nonNullable (IsScalar.decoder))
-          <*> Decoders.field (Decoders.nonNullable (IsScalar.decoder))
-          <*> Decoders.field (Decoders.nonNullable (IsScalar.decoder))
-          <*> Decoders.field (Decoders.nonNullable (IsScalar.decoder))
+          <$> Hasql.Decoders.field (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
+          <*> Hasql.Decoders.field (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
+          <*> Hasql.Decoders.field (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
+          <*> Hasql.Decoders.field (Hasql.Decoders.nonNullable (Hasql.Mapping.IsScalar.decoder))
       )
-  
