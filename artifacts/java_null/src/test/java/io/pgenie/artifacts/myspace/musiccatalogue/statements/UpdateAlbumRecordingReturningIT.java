@@ -13,11 +13,9 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 class UpdateAlbumRecordingReturningIT extends AbstractDatabaseIT {
-
     @Test
     void executesWithDefaultValues() throws SQLException {
         var result = execute(new UpdateAlbumRecordingReturning(RecordingInfo.CODEC.toAgnostic().random(new java.util.Random(0L), 0), 0L));
         assertNotNull(result);
-
     }
 }

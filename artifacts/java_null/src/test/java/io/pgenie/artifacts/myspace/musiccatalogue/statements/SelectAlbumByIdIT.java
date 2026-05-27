@@ -13,11 +13,9 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 class SelectAlbumByIdIT extends AbstractDatabaseIT {
-
     @Test
     void executesWithDefaultValues() throws SQLException {
         var result = execute(new SelectAlbumById(0L));
         assertNull(result);
-
     }
 }

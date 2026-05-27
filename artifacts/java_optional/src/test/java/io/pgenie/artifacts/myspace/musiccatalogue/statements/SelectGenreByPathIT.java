@@ -13,11 +13,9 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 class SelectGenreByPathIT extends AbstractDatabaseIT {
-
     @Test
     void executesWithDefaultValues() throws SQLException {
         var result = execute(new SelectGenreByPath(new Ltree(List.of("root"))));
         assertNotNull(result);
-
     }
 }

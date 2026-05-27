@@ -12,11 +12,11 @@ import org.junit.jupiter.api.Test;
 
 class DiscInfoIT extends AbstractDatabaseIT {
 
-    private Optional<DiscInfo> roundtrip(DiscInfo input) throws SQLException {
+    private Optional<DiscInfo> roundtrip(Optional<DiscInfo> input) throws SQLException {
         return execute(new Statement<Optional<DiscInfo>>() {
             @Override public String sql() { return "select ?::disc_info"; }
             @Override public void bindParams(PreparedStatement ps) throws SQLException {
-                DiscInfo.CODEC.bind(ps, 1, input);
+                DiscInfo.CODEC.bind(ps, 1, input.orElse(null));
             }
             @Override public boolean returnsRows() { return true; }
             @Override public Optional<DiscInfo> decodeResultSet(ResultSet rs) throws SQLException {
@@ -28,33 +28,35 @@ class DiscInfoIT extends AbstractDatabaseIT {
             }
         });
     }
+    
 
     @Test
     void roundtripNull() throws SQLException {
-        assertEquals(Optional.empty(), roundtrip(null));
+        assertEquals(Optional.empty(), roundtrip(Optional.empty()));
     }
+    
 
     @Test
     void roundtripCombination0() throws SQLException {
         var value = new DiscInfo(Optional.empty(), Optional.empty());
-        assertEquals(Optional.of(value), roundtrip(value));
+        assertEquals(Optional.of(value), roundtrip(Optional.of(value)));
     }
 
     @Test
     void roundtripCombination1() throws SQLException {
         var value = new DiscInfo(Optional.of(""), Optional.empty());
-        assertEquals(Optional.of(value), roundtrip(value));
+        assertEquals(Optional.of(value), roundtrip(Optional.of(value)));
     }
 
     @Test
     void roundtripCombination2() throws SQLException {
         var value = new DiscInfo(Optional.empty(), Optional.of(RecordingInfo.CODEC.toAgnostic().random(new java.util.Random(0L), 0)));
-        assertEquals(Optional.of(value), roundtrip(value));
+        assertEquals(Optional.of(value), roundtrip(Optional.of(value)));
     }
 
     @Test
     void roundtripCombination3() throws SQLException {
         var value = new DiscInfo(Optional.of(""), Optional.of(RecordingInfo.CODEC.toAgnostic().random(new java.util.Random(0L), 0)));
-        assertEquals(Optional.of(value), roundtrip(value));
+        assertEquals(Optional.of(value), roundtrip(Optional.of(value)));
     }
 }
