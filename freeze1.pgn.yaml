@@ -3,5 +3,6 @@ https://github.com/pgenie-io/haskell.gen/releases/download/v0.4.0/resolved.dhall
 https://github.com/pgenie-io/java.gen/releases/download/v0.6.0/resolved.dhall: sha256:9761aa67764cbdda09eacf778ca61de9da51a64ee7c9de53d15cf95129cc97b3
 https://github.com/pgenie-io/java.gen/releases/download/v0.6.1/resolved.dhall: sha256:9318c07a868f80d320f08a9b957e7a8ca116d0cb7f8f8eefa9aa0a9ca3a19b3a
 https://github.com/pgenie-io/java.gen/releases/download/v0.6.2/resolved.dhall: sha256:cc9b969eb943ac2f0922a25a05263303351fcae7c219d9f949fc6c979c204869
+https://github.com/pgenie-io/java.gen/releases/download/v0.7.0/resolved.dhall: sha256:57202ffa6b56b47a90ab8d866307421129952ada43df66a61a3b6b006b531322
 https://github.com/pgenie-io/rust.gen/releases/download/v0.4.0/resolved.dhall: sha256:ae4ae88f0678d940cdac9686d6a9dfa7d6c8bcfe2f2b7d556179b5ceec3f8eac
 https://github.com/pgenie-io/rust.gen/releases/download/v0.4.1/resolved.dhall: sha256:842d7f711f8b94236910ed47be8d23ed827078d46cc8f6fa5622ab0754c2ae73
