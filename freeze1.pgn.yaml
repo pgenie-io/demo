@@ -1,8 +1,4 @@
 # Map of generator hashes by url
-https://github.com/pgenie-io/haskell.gen/releases/download/v0.4.0/resolved.dhall: sha256:d25623bc236c7225c35bb39be0e2490b895bfaed9605c2916d6286a073e32a20
-https://github.com/pgenie-io/java.gen/releases/download/v0.6.0/resolved.dhall: sha256:9761aa67764cbdda09eacf778ca61de9da51a64ee7c9de53d15cf95129cc97b3
-https://github.com/pgenie-io/java.gen/releases/download/v0.6.1/resolved.dhall: sha256:9318c07a868f80d320f08a9b957e7a8ca116d0cb7f8f8eefa9aa0a9ca3a19b3a
-https://github.com/pgenie-io/java.gen/releases/download/v0.6.2/resolved.dhall: sha256:cc9b969eb943ac2f0922a25a05263303351fcae7c219d9f949fc6c979c204869
-https://github.com/pgenie-io/java.gen/releases/download/v0.7.0/resolved.dhall: sha256:57202ffa6b56b47a90ab8d866307421129952ada43df66a61a3b6b006b531322
-https://github.com/pgenie-io/rust.gen/releases/download/v0.4.0/resolved.dhall: sha256:ae4ae88f0678d940cdac9686d6a9dfa7d6c8bcfe2f2b7d556179b5ceec3f8eac
-https://github.com/pgenie-io/rust.gen/releases/download/v0.4.1/resolved.dhall: sha256:842d7f711f8b94236910ed47be8d23ed827078d46cc8f6fa5622ab0754c2ae73
+https://github.com/pgenie-io/haskell.gen/releases/download/v1.0.0/resolved.dhall: sha256:e2d2c3f84598e00641da4b13d29771ec1d72ec26fe8675b884476aac9ff90e62
+https://github.com/pgenie-io/java.gen/releases/download/v1.0.0/resolved.dhall: sha256:fa593a6046f848f25cfd0bfb1c51c4cf4f4c58abfab72b54464dc799239e77aa
+https://github.com/pgenie-io/rust.gen/releases/download/v1.0.0/resolved.dhall: sha256:596c92171f886db2ffb5d46c79b9df1be1322e6cd509d9da207acb9148d4d780

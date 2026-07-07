@@ -23,16 +23,16 @@ postgres: 18
 # If you don't specify any artifacts Pgenie simply validates your schema
 # and queries.
 artifacts:
-  haskell: https://github.com/pgenie-io/haskell.gen/releases/download/v0.4.0/resolved.dhall
+  haskell: https://github.com/pgenie-io/haskell.gen/releases/download/v1.0.0/resolved.dhall
   
   java-optional:
-    gen: https://github.com/pgenie-io/java.gen/releases/download/v0.7.0/resolved.dhall
+    gen: https://github.com/pgenie-io/java.gen/releases/download/v1.0.0/resolved.dhall
     config:
       useOptional: true # Use Optional for nullable fields for clarity.
 
-  java-null: https://github.com/pgenie-io/java.gen/releases/download/v0.7.0/resolved.dhall
+  java-null: https://github.com/pgenie-io/java.gen/releases/download/v1.0.0/resolved.dhall
 
   rust:
-    gen: https://github.com/pgenie-io/rust.gen/releases/download/v0.4.1/resolved.dhall
+    gen: https://github.com/pgenie-io/rust.gen/releases/download/v1.0.0/resolved.dhall
     config:
       deadpool: true
