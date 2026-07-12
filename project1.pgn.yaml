@@ -36,3 +36,14 @@ artifacts:
     gen: https://github.com/pgenie-io/rust.gen/releases/download/v1.0.0/resolved.dhall
     config:
       deadpool: true
+
+  python_sync:
+    gen: https://raw.githubusercontent.com/slavashvets/python.gen/270eb445b978e7bdd363d628a35be2d3453679c0/src/package.dhall
+    config:
+      onUnsupported: Skip
+      sync: true
+
+  python_async:
+    gen: https://raw.githubusercontent.com/slavashvets/python.gen/270eb445b978e7bdd363d628a35be2d3453679c0/src/package.dhall
+    config:
+      onUnsupported: Skip
