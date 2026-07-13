@@ -25,12 +25,12 @@ postgres: 18
 artifacts:
   haskell: https://github.com/pgenie-io/haskell.gen/releases/download/v1.0.0/resolved.dhall
   
-  java-optional:
+  java_optional:
     gen: https://github.com/pgenie-io/java.gen/releases/download/v1.1.0/resolved.dhall
     config:
       useOptional: true # Use Optional for nullable fields for clarity.
 
-  java-null: https://github.com/pgenie-io/java.gen/releases/download/v1.1.0/resolved.dhall
+  java_null: https://github.com/pgenie-io/java.gen/releases/download/v1.1.0/resolved.dhall
 
   rust:
     gen: https://github.com/pgenie-io/rust.gen/releases/download/v1.0.0/resolved.dhall
@@ -47,3 +47,9 @@ artifacts:
     gen: https://raw.githubusercontent.com/slavashvets/python.gen/270eb445b978e7bdd363d628a35be2d3453679c0/src/package.dhall
     config:
       onUnsupported: Skip
+
+  python_2:
+    gen: https://raw.githubusercontent.com/slavashvets/python.gen/55d14db50fab8a2df112daf5fed4984cdf725a9e/src/package.dhall
+    config:
+      onUnsupported: Skip
+      emitSync: true
