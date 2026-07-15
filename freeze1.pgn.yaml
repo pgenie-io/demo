@@ -2,4 +2,4 @@
 https://github.com/pgenie-io/haskell.gen/releases/download/v1.0.0/resolved.dhall: sha256:e2d2c3f84598e00641da4b13d29771ec1d72ec26fe8675b884476aac9ff90e62
 https://github.com/pgenie-io/java.gen/releases/download/v1.1.0/resolved.dhall: sha256:1f08d67dc1286a818ecc6eb28d360fb5b4ab7af694afc98950f85e47c338c101
 https://github.com/pgenie-io/rust.gen/releases/download/v1.0.0/resolved.dhall: sha256:596c92171f886db2ffb5d46c79b9df1be1322e6cd509d9da207acb9148d4d780
-https://raw.githubusercontent.com/slavashvets/python.gen/270eb445b978e7bdd363d628a35be2d3453679c0/src/package.dhall: sha256:f418e277ac464299631536c209d5fe2171232f7c9eeaffc5b6db5e1f739b099a
+https://raw.githubusercontent.com/slavashvets/python.gen/b64c505a6a4ca879629d29317e62e5c799ec3ac5/src/package.dhall: sha256:2f676801762a3580d774f637a9c7cbfceac3ca0feda614041e42ff6f82949bda

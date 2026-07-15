@@ -14,8 +14,7 @@ demo/
     ├── haskell/
     ├── java_null/
     ├── java_optional/
-    ├── python_async/
-    ├── python_sync/
+    ├── python/
     └── rust/
 ```
 
@@ -34,10 +33,7 @@ The `artifacts/` directory contains **generated code** that pGenie produces base
 - **java_optional/** - A Java library with type-safe mappings using `Optional` for nullable types
   - Integrates with the [pgJDBC](https://jdbc.postgresql.org/) library
 
-- **python_async/** - A Python library with type-safe mappings for asynchronous code
-  - Integrates with the [psycopg](https://www.psycopg.org/psycopg3/) library
-
-- **python_sync/** - A Python library with type-safe mappings for synchronous code
+- **python/** - A Python library with type-safe mappings
   - Integrates with the [psycopg](https://www.psycopg.org/psycopg3/) library
 
 - **rust/** - A Rust library with type-safe mappings

@@ -1,10 +1,10 @@
-mod album;
 mod album_format;
-mod disc_info;
 mod recording_info;
+mod disc_info;
 mod track_info;
-pub use album::Album;
+mod album;
 pub use album_format::AlbumFormat;
-pub use disc_info::DiscInfo;
 pub use recording_info::RecordingInfo;
+pub use disc_info::DiscInfo;
 pub use track_info::TrackInfo;
+pub use album::Album;

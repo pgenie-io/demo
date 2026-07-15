@@ -39,11 +39,11 @@ library
     MySpace.MusicCatalogue.Statements.SelectGenreByArtist
     MySpace.MusicCatalogue.Statements.UpdateAlbumRecordingReturning
     MySpace.MusicCatalogue.Statements.UpdateAlbumReleased
-    MySpace.MusicCatalogue.Types.Album
     MySpace.MusicCatalogue.Types.AlbumFormat
-    MySpace.MusicCatalogue.Types.DiscInfo
     MySpace.MusicCatalogue.Types.RecordingInfo
+    MySpace.MusicCatalogue.Types.DiscInfo
     MySpace.MusicCatalogue.Types.TrackInfo
+    MySpace.MusicCatalogue.Types.Album
 
   build-depends:
     aeson >=2 && <3,
